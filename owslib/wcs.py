@@ -17,7 +17,7 @@ from __future__ import (absolute_import, division, print_function)
 
 import urllib2
 from . import etree
-from .coverage import wcs100, wcs110, wcsBase
+from .coverage import wcs100, wcs110, wcs200, wcsBase
 
 
 def WebCoverageService(url, version=None, xml=None, cookies=None, timeout=30):
@@ -36,8 +36,12 @@ def WebCoverageService(url, version=None, xml=None, cookies=None, timeout=30):
         capabilities = etree.etree.fromstring(xml)
         version = capabilities.get('version')
         del capabilities
-        
+
     if version == '1.0.0':
-        return wcs100.WebCoverageService_1_0_0.__new__(wcs100.WebCoverageService_1_0_0, url, xml, cookies)
+        return wcs100.WebCoverageService_1_0_0(url, xml, cookies)
     elif version == '1.1.0':
-        return wcs110.WebCoverageService_1_1_0.__new__(wcs110.WebCoverageService_1_1_0,url, xml, cookies)
+        return wcs110.WebCoverageService_1_1_0(url, xml, cookies)
+    elif version == '2.0.0':
+        return wcs200.WebCoverageService_2_0_0(url, xml, cookies)
+    else:
+        raise NotImplementedError('WCS version {} not yet implemented.'.format(version))

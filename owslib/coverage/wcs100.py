@@ -27,7 +27,7 @@ def ns(tag):
 
 class WebCoverageService_1_0_0(WCSBase):
     """Abstraction for OGC Web Coverage Service (WCS), version 1.0.0
-    Implements IWebCoverageService.
+    Implements WebCoverageService.
     """
     def __getitem__(self,name):
         ''' check contents dictionary to allow dict like access to service layers'''

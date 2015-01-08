@@ -49,6 +49,7 @@ class Namespaces(object):
         'wfs'   :   'http://www.opengis.net/wfs',
         'wfs20' :   'http://www.opengis.net/wfs/2.0',
         'wcs'   :   'http://www.opengis.net/wcs',
+        'wcs20':   'http://www.opengis.net/wcs/2.0',
         'wps'   :   'http://www.opengis.net/wps/1.0.0',
         'wps100':   'http://www.opengis.net/wps/1.0.0',
         'xlink' :   'http://www.w3.org/1999/xlink',

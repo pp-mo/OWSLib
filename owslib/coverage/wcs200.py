@@ -13,7 +13,9 @@
 
 from __future__ import (absolute_import, division, print_function)
 
-from .wcsBase import WCSBase, WCSCapabilitiesReader, ServiceException
+import warnings
+
+from wcsBase import WCSBase, WCSCapabilitiesReader, ServiceException
 from owslib.util import openURL, testXMLValue
 from urllib import urlencode
 from urllib2 import urlopen
@@ -25,104 +27,235 @@ from owslib.crs import Crs
 import logging
 from owslib.util import log
 
-def ns(tag):
-    return '{http://www.opengis.net/wcs/1.1}'+tag
+from owslib.etree import etree
 
-class WebCoverageService_1_1_0(WCSBase):
-    """Abstraction for OGC Web Coverage Service (WCS), version 1.1.0
-    Implements WebCoverageService.
+def ns(tag):
+    return '{http://www.opengis.net/wcs/2.0}'+tag
+
+from owslib.namespaces import Namespaces
+from owslib.util import nspath_eval
+
+WCS_namespaces = Namespaces().get_namespaces(['wcs', 'wcs20', 'ows', 'ows200'])
+WCS_namespaces['wcs20ows'] = WCS_namespaces['wcs20'] + '/ows'
+
+
+VERSION = '2.0.0'
+
+
+def find_element(document, name, namespaces):
     """
+    Find an element in a document given some possible namespaces.
     
+    e.g. find_element(capabilities, 'ServiceIdentification', ['ows200', 'wcs200ows'])
+    """
+    if isinstance(namespaces, basestring):
+        namespaces = [namespaces]
+    for ns in namespaces:
+        elem = document.find('{}:{}'.format(ns, name), namespaces=WCS_namespaces)
+        if elem is not None:
+            return elem
+    raise ValueError('Element {} not found.'.format(name))
+
+
+class WCSExtension(object):
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def from_xml(cls, element, service):
+        """
+        Given the XML dom object, and the service from whence it came,
+        construct an extension instance.
+        """
+        raise NotImplementedError()
+
+    registered_extensions = {}
+
+
+class MetOceanCoverageCollection(WCSExtension):
+    WCS_namespaces['WCSmetOcean'] = 'http://def.wmo.int/metce/2013/metocean'
+
+    def __init__(self, service, coverage_collection_id, envelope=None, reference_times=None):
+        #: The WebCoverageService instance that created this CoverageCollection.
+        self.service = service
+
+        self.coverage_collection_id = coverage_collection_id
+        self.envelope = envelope
+        self.reference_times = reference_times
+
+    @classmethod
+    def from_xml(cls, element, service):
+        get_text = lambda elem: elem.text
+        element_mapping = {'{{{WCSmetOcean}}}coverageCollectionId'.format(**WCS_namespaces): ['coverage_collection_id', get_text],
+                           # The latest spect states that there will be an envelope at this level, but the test server has a boundedBy parenting the envelope.
+                           '{{{gml32}}}boundedBy'.format(**WCS_namespaces): ['envelope', GMLBoundedBy.from_xml],
+                           '{{{WCSmetOcean}}}referenceTimeList'.format(**WCS_namespaces): ['reference_times', ReferenceTimes.from_xml]}
+        keywords = {'service': service}
+        for child in element:
+            if child.tag in element_mapping:
+                keyword_name, element_fn = element_mapping[child.tag]
+                keywords[keyword_name] = element_fn(child)
+            else:
+                log.debug('Coverage tag {} not found.'.format(child.tag))
+        try:
+            return cls(**keywords)
+        except:
+            print('Tried to initialise {} with {}'.format(cls, keywords))
+            raise
+
+    def describe(self):
+        """
+        Request describeCoverageCollection for this collection.
+
+        """
+        service = self.service
+        coverage_collection = self.service.find_operation('DescribeCoverageCollection')
+        base_url = coverage_collection.href_via('HTTP', 'Get')
+
+        #process kwargs
+        request = {'version': service.version,
+                   'request': 'DescribeCoverageCollection',
+                   'service':'WCS',
+                   '{{{WCSmetOcean}}}coverageCollectionId'.format(**WCS_namespaces): self.coverage_collection_id}
+        #encode and request
+        data = urlencode(request)
+
+        return openURL(base_url, data, 'Get', service.cookies)
+
+# Register the MetOcean extension.
+WCSExtension.registered_extensions['{http://def.wmo.int/metce/2013/metocean}CoverageCollectionSummary'] = MetOceanCoverageCollection.from_xml
+
+
+class ReferenceTimes(object):
+    def __init__(self, times):
+        self.times = times
+
+    @classmethod
+    def from_xml(cls, element):
+        # XXX TODO
+        return cls(element)
+
+
+class GMLEnvelope(object):
+    WCS_namespaces['gml32'] = "http://www.opengis.net/gml/3.2"
+    def __init__(self, times):
+        self.times = times
+
+    @classmethod
+    def from_xml(cls, element):
+        # XXX TODO
+        return cls(element)
+
+
+class GMLBoundedBy(object):
+    @classmethod
+    def from_xml(cls, element):
+        # This is a dumb class which just returns its only child (this is removed
+        # from the spec in later revisions, but is still in place on the test server).
+        return GMLEnvelope.from_xml(element[0])
+
+
+class CoverageSummary(object):
+    def __init__(self, coverageid, subtype=None):
+        self.coverageid = coverageid
+        self.subtype = subtype
+
+    @classmethod
+    def from_xml(cls, element):
+        keywords = {'coverageid': '{{{wcs20}}}CoverageId'.format(**WCS_namespaces),
+                    'subtype': '{{{wcs20}}}CoverageSubtype'.format(**WCS_namespaces)}
+        element_mapping = {identifier: keyword_name
+                           for keyword_name, identifier in keywords.items()}
+        for child in element:
+            if child.tag in element_mapping:
+                keywords[element_mapping[child.tag]] = child.text
+            else:
+                log.debug('Coverage tag {} not found.'.format(child.tag))
+        return cls(**keywords)
+
+
+class WebCoverageService_2_0_0(WCSBase):
+    """Abstraction for OGC Web Coverage Service (WCS), version 2.0.0
+    Implements IWebCoverageService.
+
+    """
     def __getitem__(self, name):
         ''' check contents dictionary to allow dict like access to service layers'''
         if name in self.__getattribute__('contents').keys():
             return self.__getattribute__('contents')[name]
         else:
             raise KeyError("No content named %s" % name)
-    
-    def __init__(self,url,xml, cookies):
-        self.version='1.1.0'
-        self.url = url   
-        self.cookies=cookies
+
+    def __new__(cls, url, xml=None, cookies=None):
+        if cookies is not None:
+            raise ValueError('WCS2 does not support cookies')
+        return WCSBase.__new__(cls, url, xml, None)
+
+    def __init__(self, url, xml=None, _=None):
+        self.version = VERSION
+        self.url = url
+
         # initialize from saved capability document or access the server
         reader = WCSCapabilitiesReader(self.version)
+
         if xml:
             self._capabilities = reader.readString(xml)
         else:
             self._capabilities = reader.read(self.url)
 
         # check for exceptions
-        se = self._capabilities.find('{http://www.opengis.net/ows/1.1}Exception')
+        se = self._capabilities.find('wcs20:Exception', namespaces=WCS_namespaces)
 
         if se is not None:
             err_message = str(se.text).strip()
             raise ServiceException(err_message, xml)
 
         #build metadata objects:
-        
         #serviceIdentification metadata
-        elem=self._capabilities.find('{http://www.opengis.net/wcs/1.1/ows}ServiceIdentification')
-        if elem is None:
-            elem=self._capabilities.find('{http://www.opengis.net/ows/1.1}ServiceIdentification')
-        self.identification=ServiceIdentification(elem)
-        
+        print(etree.tostring(self._capabilities, encoding='utf8', method='xml'))
+        service = find_element(self._capabilities, 'ServiceIdentification',
+                               ['ows200', 'wcs20ows', 'wcs20'])
+        self.identification=ServiceIdentification(service)
+
         #serviceProvider
-        elem=self._capabilities.find('{http://www.opengis.net/ows/1.1}ServiceProvider')
-        self.provider=ServiceProvider(elem)
-                
+        try:
+            provider = find_element(self._capabilities, 'ServiceProvider',
+                                    ['ows200'])
+        except ValueError:
+            log.debug('WCS 2.0.0 DEBUG: No service provider identified.')
+        else:
+            self.provider = ServiceProvider(provider)
+
         #serviceOperations
         self.operations = []
-        for elem in self._capabilities.findall('{http://www.opengis.net/wcs/1.1/ows}OperationsMetadata/{http://www.opengis.net/wcs/1.1/ows}Operation/'):
-            self.operations.append(Operation(elem))
-        
-        # exceptions - ***********TO DO *************
-            self.exceptions = [f.text for f \
-                in self._capabilities.findall('Capability/Exception/Format')]
-              
-        # serviceContents: our assumption is that services use a top-level layer
-        # as a metadata organizer, nothing more.
+        for operation in self._capabilities.find('ows200:OperationsMetadata',
+                                                 namespaces=WCS_namespaces):
+            self.operations.append(Operation(operation))
+
+        contents = self._capabilities.find('wcs20:Contents', namespaces=WCS_namespaces)
+
         self.contents = {}
-        top = self._capabilities.find('{http://www.opengis.net/wcs/1.1}Contents/{http://www.opengis.net/wcs/1.1}CoverageSummary')
-        for elem in self._capabilities.findall('{http://www.opengis.net/wcs/1.1}Contents/{http://www.opengis.net/wcs/1.1}CoverageSummary/{http://www.opengis.net/wcs/1.1}CoverageSummary'):                    
-            cm=ContentMetadata(elem, top, self)
-            self.contents[cm.id]=cm
-            
-        if self.contents=={}:
-            #non-hierarchical.
-            top=None
-            for elem in self._capabilities.findall('{http://www.opengis.net/wcs/1.1}Contents/{http://www.opengis.net/wcs/1.1}CoverageSummary'):     
-                cm=ContentMetadata(elem, top, self)
-                #make the describeCoverage requests to populate the supported formats/crs attributes
-                self.contents[cm.id]=cm
+        for coverage in contents.findall('wcs20:CoverageSummary', namespaces=WCS_namespaces):
+            coverage = CoverageSummary.from_xml(coverage)
+            self.contents[coverage.coverageid] = coverage
+
+        self.contents_extensions = []
+        for content_extensions in contents.findall('wcs20:Extension', namespaces=WCS_namespaces):
+            for extension in content_extensions:
+                if extension.tag not in WCSExtension.registered_extensions:
+                    print('FAIL:', extension.tag)
+                    log.debug('Unsupported content extension: {}'.format(extension.tag))
+                else:
+                    extension = WCSExtension.registered_extensions[extension.tag](extension, self)
+                    self.contents_extensions.append(extension)
 
     def items(self):
-        '''supports dict-like items() access'''
-        items=[]
-        for item in self.contents:
-            items.append((item,self.contents[item]))
-        return items
-          
-    #TO DECIDE: Offer repackaging of coverageXML/Multipart MIME output?
-    #def getData(self, directory='outputdir', outputfile='coverage.nc',  **kwargs):
-        #u=self.getCoverageRequest(**kwargs)
-        ##create the directory if it doesn't exist:
-        #try:
-            #os.mkdir(directory)
-        #except OSError, e:
-            ## Ignore directory exists error
-            #if e.errno <> errno.EEXIST:
-                #raise          
-        ##elif wcs.version=='1.1.0':
-        ##Could be multipart mime or XML Coverages document, need to use the decoder...
-        #decoder=wcsdecoder.WCSDecoder(u)
-        #x=decoder.getCoverages()
-        #if type(x) is wcsdecoder.MpartMime:
-            #filenames=x.unpackToDir(directory)
-            ##print 'Files from 1.1.0 service written to %s directory'%(directory)
-        #else:
-            #filenames=x
-        #return filenames
-    
+        return self.contents.items()
+
+#    def describeCoverageCollection(self, collectionid):
+#        if isinstance(collectionid, CoverageSummary):
+#            collectionid = collectionid.collectionid
+
     #TO DO: Handle rest of the  WCS 1.1.0 keyword parameters e.g. GridCRS etc. 
     def getCoverage(self, identifier=None, bbox=None, time=None, format = None, store=False, rangesubset=None, gridbaseCRS=None, gridtype=None, gridCS=None, gridorigin=None, gridoffsets=None, method='Get',**kwargs):
         """Request and return a coverage from the WCS as a file-like object
@@ -175,45 +308,63 @@ class WebCoverageService_1_1_0(WCSBase):
             request['gridorigin']=gridorigin
         if gridoffsets:
             request['gridoffsets']=gridoffsets
-       
+
        #anything else e.g. vendor specific parameters must go through kwargs
         if kwargs:
             for kw in kwargs:
                 request[kw]=kwargs[kw]
-        
+
         #encode and request
         data = urlencode(request)
-        
+
         u=openURL(base_url, data, method, self.cookies)
         return u
-        
-        
+
     def getOperationByName(self, name):
         """Return a named operation item."""
         for item in self.operations:
             if item.name == name:
                 return item
         raise KeyError("No operation named %s" % name)
-        
+
+    def find_operation(self, name):
+        for item in self.operations:
+            if item.name == name:
+                return item
+        raise KeyError("No operation named %s" % name)
+
+
 class Operation(object):
     """Abstraction for operation metadata    
     Implements IOperationMetadata.
     """
     def __init__(self, elem):
-        self.name = elem.get('name')       
-        self.formatOptions = [f.text for f in elem.findall('{http://www.opengis.net/wcs/1.1/ows}Parameter/{http://www.opengis.net/wcs/1.1/ows}AllowedValues/{http://www.opengis.net/wcs/1.1/ows}Value')]
+        self.name = elem.get('name')
+        self.formatOptions = [f.text for f in elem.findall('wcs20ows:Parameter/wcs20ows:AllowedValues/wcs20ows:Value',
+                                                           namespaces=WCS_namespaces)]
         methods = []
-        for verb in elem.findall('{http://www.opengis.net/wcs/1.1/ows}DCP/{http://www.opengis.net/wcs/1.1/ows}HTTP/*'):
+        for verb in elem.findall('ows200:DCP/ows200:HTTP/*', namespaces=WCS_namespaces):
             url = verb.attrib['{http://www.w3.org/1999/xlink}href']
             methods.append((verb.tag, {'url': url}))
         self.methods = dict(methods)
+
+    def __repr__(self):
+        return repr(self.methods)
+
+    def href_via(self, protocol='HTTP', method='Get'):
+        if protocol != 'HTTP' or method not in ['Get', 'Post']:
+            raise ValueError('Unexpected method or protocol.')
+        for method, content in self.methods.items():
+            if method.endswith(method):
+                return content['url']
+
 
 class ServiceIdentification(object):
     """ Abstraction for ServiceIdentification Metadata 
     implements IServiceIdentificationMetadata"""
     def __init__(self,elem):        
         self.service="WCS"
-        self.version="1.1.0"
+        self.version = VERSION
         self.title=testXMLValue(elem.find('{http://www.opengis.net/ows}Title'))
         if self.title is None:  #may have used the wcs ows namespace:
             self.title=testXMLValue(elem.find('{http://www.opengis.net/wcs/1.1/ows}Title'))
@@ -237,8 +388,8 @@ class ServiceIdentification(object):
             self.accessConstraints=elem.find('{http://www.opengis.net/wcs/1.1/ows}AccessConstraints').text
         else:
             self.accessConstraints=None
-       
-       
+
+
 class ServiceProvider(object):
     """ Abstraction for ServiceProvider metadata 
     implements IServiceProviderMetadata """
@@ -251,6 +402,7 @@ class ServiceProvider(object):
         #self.contact=ServiceContact(elem.find('{http://www.opengis.net/ows}ServiceContact'))
         self.contact =ContactMetadata(elem)
         self.url=self.name # no obvious definitive place for url in wcs, repeat provider name?
+
 
 class ContactMetadata(object):
     ''' implements IContactMetadata'''
@@ -293,6 +445,7 @@ class ContactMetadata(object):
             self.email =            elem.find('{http://www.opengis.net/ows}ServiceContact/{http://www.opengis.net/ows}ContactInfo/{http://www.opengis.net/ows}Address/{http://www.opengis.net/ows}ElectronicMailAddress').text
         except AttributeError:
             self.email = None
+
 
 class ContentMetadata(object):
     """Abstraction for WCS ContentMetadata
@@ -377,30 +530,12 @@ class ContentMetadata(object):
             #grid=Grid(gridelem)
         return grid
     grid=property(_getGrid, None)
-        
-        
-        
-    #time limits/postions require a describeCoverage request therefore only resolve when requested
-    def _getTimeLimits(self):
-         timelimits=[]
-         for elem in self._service.getDescribeCoverage(self.id).findall(ns('CoverageDescription/')+ns('Domain/')+ns('TemporalDomain/')+ns('TimePeriod/')):
-             subelems=elem.getchildren()
-             timelimits=[subelems[0].text,subelems[1].text]
-         return timelimits
-    timelimits=property(_getTimeLimits, None)
-    
-    #TODO timepositions property
-    def _getTimePositions(self):
-        return []
-    timepositions=property(_getTimePositions, None)
-    
-    def _checkChildAndParent(self, path):
-        ''' checks child coverage  summary, and if item not found checks higher level coverage summary'''
-        try:
-            value = self._elem.find(path).text
-        except:
-            try:
-                value = self._parent.find(path).text
-            except:
-                value = None
-        return value  
+
+
+
+if __name__ == '__main__':
+    wcs = WebCoverageService_2_0_0('http://exxvmviswxaftsing02:8008/GlobalWCSService')
+    print(wcs.contents)
+    print(wcs.contents_extensions)
+    print(wcs.operations)
+    print(wcs.contents_extensions[0].describe().read())
