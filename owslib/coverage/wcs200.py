@@ -156,22 +156,43 @@ class GMLBoundedBy(object):
 
 
 class CoverageSummary(object):
-    def __init__(self, coverageid, subtype=None):
-        self.coverageid = coverageid
+    def __init__(self, service, coverage_id, subtype=None):
+        self.service = service
+        self.coverage_id = coverage_id
         self.subtype = subtype
 
     @classmethod
-    def from_xml(cls, element):
-        keywords = {'coverageid': '{{{wcs20}}}CoverageId'.format(**WCS_namespaces),
+    def from_xml(cls, element, service):
+        keywords = {'coverage_id': '{{{wcs20}}}CoverageId'.format(**WCS_namespaces),
                     'subtype': '{{{wcs20}}}CoverageSubtype'.format(**WCS_namespaces)}
         element_mapping = {identifier: keyword_name
                            for keyword_name, identifier in keywords.items()}
+        keywords['service'] = service
         for child in element:
             if child.tag in element_mapping:
                 keywords[element_mapping[child.tag]] = child.text
             else:
                 log.debug('Coverage tag {} not found.'.format(child.tag))
         return cls(**keywords)
+    
+    def describe(self):
+        """
+        Request describeCoverage for this coverage.
+
+        """
+        service = self.service
+        coverage_collection = self.service.find_operation('DescribeCoverage')
+        base_url = coverage_collection.href_via('HTTP', 'Get')
+
+        #process kwargs
+        request = {'version': service.version,
+                   'request': 'DescribeCoverage',
+                   'service':'WCS',
+                   'CoverageId': self.coverage_id}
+        #encode and request
+        data = urlencode(request)
+
+        return openURL(base_url, data, 'Get', service.cookies)
 
 
 class WebCoverageService_2_0_0(WCSBase):
@@ -212,7 +233,7 @@ class WebCoverageService_2_0_0(WCSBase):
 
         #build metadata objects:
         #serviceIdentification metadata
-        print(etree.tostring(self._capabilities, encoding='utf8', method='xml'))
+#         print(etree.tostring(self._capabilities, encoding='utf8', method='xml'))
         service = find_element(self._capabilities, 'ServiceIdentification',
                                ['ows200', 'wcs20ows', 'wcs20'])
         self.identification=ServiceIdentification(service)
@@ -236,8 +257,8 @@ class WebCoverageService_2_0_0(WCSBase):
 
         self.contents = {}
         for coverage in contents.findall('wcs20:CoverageSummary', namespaces=WCS_namespaces):
-            coverage = CoverageSummary.from_xml(coverage)
-            self.contents[coverage.coverageid] = coverage
+            coverage = CoverageSummary.from_xml(coverage, self)
+            self.contents[coverage.coverage_id] = coverage
 
         self.contents_extensions = []
         for content_extensions in contents.findall('wcs20:Extension', namespaces=WCS_namespaces):
@@ -249,12 +270,25 @@ class WebCoverageService_2_0_0(WCSBase):
                     extension = WCSExtension.registered_extensions[extension.tag](extension, self)
                     self.contents_extensions.append(extension)
 
+    def _raw_capabilities(self):
+        return etree.tostring(self._capabilities, encoding='utf8', method='xml')
+
     def items(self):
         return self.contents.items()
 
 #    def describeCoverageCollection(self, collectionid):
 #        if isinstance(collectionid, CoverageSummary):
 #            collectionid = collectionid.collectionid
+
+    def getCoverage_xml(self, xml):
+        coverage_collection = self.find_operation('GetCoverage')
+        base_url = coverage_collection.href_via('HTTP', 'Post')
+        from owslib.util import http_post
+        return http_post(base_url, xml)
+#         #encode and request
+#         data = urlencode(request)
+# 
+#         return openURL(base_url, data, 'Get')
 
     #TO DO: Handle rest of the  WCS 1.1.0 keyword parameters e.g. GridCRS etc. 
     def getCoverage(self, identifier=None, bbox=None, time=None, format = None, store=False, rangesubset=None, gridbaseCRS=None, gridtype=None, gridCS=None, gridorigin=None, gridoffsets=None, method='Get',**kwargs):
@@ -354,9 +388,10 @@ class Operation(object):
     def href_via(self, protocol='HTTP', method='Get'):
         if protocol != 'HTTP' or method not in ['Get', 'Post']:
             raise ValueError('Unexpected method or protocol.')
-        for method, content in self.methods.items():
-            if method.endswith(method):
+        for method_type, content in self.methods.items():
+            if method_type.endswith(method):
                 return content['url']
+        raise ValueError('{} method {} not found for {}.'.format(protocol, method, self.name))
 
 
 class ServiceIdentification(object):
@@ -531,11 +566,83 @@ class ContentMetadata(object):
         return grid
     grid=property(_getGrid, None)
 
+# xmlns:ns4="http://def.wmo.int/metce/2013/metocean"
+# xmlns:ows200="http://www.opengis.net/ows/2.0"
+# xmlns:wcs20="http://www.opengis.net/wcs/2.0"
+# xmlns:xlink="http://www.w3.org/1999/xlink"
+# xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+# version="2.0.0" xsi:schemaLocation="http://schemas.opengis.net/wcs/2.0 http://schemas.opengis.net/wcs/2.0/wcsAll.xsd http://def.wmo.int/metce/2013/metocean
+# https://ogcie.iblsoft.com/schemas/wcs-2.0/wcsMetOceanGetCapabilities.xsd">
+#   <ows200:ServiceIdentification>
+
+
+# Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+#                         <gml:exterior>
+
+# https://ogcie.iblsoft.com/metocean/wcs?Service=WCS&Version=2.0.0&Format=JSON&Request=GetCoverage&CoverageID=GFS_Latest_Ground&
+# RangeSubset=total-precipitation-rate&Size=t(7)&Subset=lat(50.718412)&
+# Subset=long(-3.5338990000000194)&Subset=t(%222015-01-09T14%3A00%3A00.000Z%22%2C%222015-01-09T20%3A00%3A00.000Z%22)&
+# Interpolation=lat(linear)&Interpolation=long(linear)&Interpolation=t(linear)
+
+coverage_request_example = """
+<?xml version="1.0" encoding="UTF-8"?>
+<wcs2:GetCoverage xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:wcs2="http://www.opengis.net/wcs/2.0"
+    xmlns:wcsCRS="http://www.opengis.net/wcs_service-extension_crs/1.0"
+    xmlns:int="http://www.opengis.net/WCS_service-extension_interpolation/1.0"
+    xmlns:rsub="http://www.opengis.net/wcs/range-subsetting/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:metocean="http://def.wmo.int/metce/2013/metocean"
+    service="WCS" version="2.0.0"
+    xsi:schemaLocation="http://www.opengis.net/wcs/2.0 http://schemas.opengis.net/wcs/2.0/wcsGetCoverage.xsd
+    http://www.opengis.net/wcs/crs/1.0 https://raw.github.com/EOxServer/schemas/master/wcs/crs/1.0/wcsCrs.xsd
+    http://www.opengis.net/wcs/range-subsetting/1.0 https://raw.github.com/EOxServer/schemas/master/wcs/range-subsetting/1.0/rsub.xsd">
+    
+    <wcs2:Extension>
+        <rsub:rangeSubset>
+            <rsub:rangeComponent>temperature</rsub:rangeComponent>
+        </rsub:rangeSubset>
+        <wcsCRS:GetCoverageCrs>
+            <wcsCRS:subsettingCrs>
+                http://www.opengis.net/def/crs-combine?
+                1=CRS:84&amp;
+                2=http://www.codes.wmo.int/GRIB2/table4.5/IsobaricSurface&amp;
+                3=gml:TimeInstant
+            </wcsCRS:subsettingCrs>
+        </wcsCRS:GetCoverageCrs>
+    </wcs2:Extension>
+    <wcs2:CoverageId>GFS_Latest_ISBL</wcs2:CoverageId>
+    <metocean:DimensionSlice>
+        <wcs2:Dimension>lat</wcs2:Dimension>
+        <metocean:SlicePoint uomLabels="Deg">51.0</metocean:SlicePoint>
+    </metocean:DimensionSlice>
+    <metocean:DimensionSlice>
+        <wcs2:Dimension>long</wcs2:Dimension>
+        <metocean:SlicePoint uomLabels="Deg">-2.0</metocean:SlicePoint>
+    </metocean:DimensionSlice>
+    <wcs2:format>NetCDF3</wcs2:format>
+</wcs2:GetCoverage>
+""".strip()
 
 
 if __name__ == '__main__':
-    wcs = WebCoverageService_2_0_0('http://exxvmviswxaftsing02:8008/GlobalWCSService')
-    print(wcs.contents)
+    wcs = WebCoverageService_2_0_0('https://ogcie.iblsoft.com/metocean/wcs')
+    print(wcs.contents.keys())
     print(wcs.contents_extensions)
-    print(wcs.operations)
-    print(wcs.contents_extensions[0].describe().read())
+    print([op.name for op in wcs.operations])
+    
+#     print(wcs._raw_capabilities())
+    coverage_collections = {ext.coverage_collection_id: ext
+                            for ext in wcs.contents_extensions
+                            if isinstance(ext, MetOceanCoverageCollection)}
+    print(coverage_collections)
+#     print(coverage_collections['GFS'].describe().read())
+#     print(wcs.contents_extensions[0].describe().read())
+#     print(wcs.contents['GFS_Latest_ISBL'].describe().read())
+    import tempfile
+    with tempfile.NamedTemporaryFile('wb', prefix='wcs.', suffix='.nc', delete=False) as fh:
+        fh.write(wcs.getCoverage_xml(coverage_request_example))
+    
+    print(fh.name)
+#     os.unlink(fh.name)
+    

@@ -1,0 +1,1214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metocean:CoverageCollectionDescriptions xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:wcs="http://www.opengis.net/wcs/2.0" xmlns:sam="http://www.opengis.net/sampling/2.0" xmlns:sams="http://www.opengis.net/samplingSpatial/2.0" xmlns:gmlcov="http://www.opengis.net/gmlcov/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:om="http://www.opengis.net/om/2.0" xmlns:metocean="http://def.wmo.int/metce/2013/metocean" xsi:schemaLocation="http://schemas.opengis.net/wcs/2.0 http://schemas.opengis.net/wcs/2.0/wcsAll.xsd http://def.wmo.int/metce/2013/metocean https://ogcie.iblsoft.com/schemas/wcs-2.0/wcsMetOceanDescribeCoverageCollection.xsd">
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GEFS_2015-01-08T00.00.00Z">
+    <metocean:coverageCollectionId>GEFS</metocean:coverageCollectionId>
+    <gml:name>GEFS Ensemble Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GEFS_2015-01-08T00.00.00Z">
+        <gml:timePosition>2015-01-08T00:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GEFS_2015-01-08T00.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GEFS_2015-01-08T00.00.00Z">
+            <gml:beginPosition>2015-01-08T00:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-14T00:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GEFS_2015-01-08T00.00.00Z">
+                <gml:timePosition>2015-01-08T00:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GEFS_2015-01-08T00.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GEFS_2015-01-08T00.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GEFS_2015-01-08T00.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GEFS_2015-01-08T00.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GEFS_2015-01-08T00.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T00.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T00.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T00.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T00.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T00.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T00.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GEFS_2015-01-08T06.00.00Z">
+    <metocean:coverageCollectionId>GEFS</metocean:coverageCollectionId>
+    <gml:name>GEFS Ensemble Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GEFS_2015-01-08T06.00.00Z">
+        <gml:timePosition>2015-01-08T06:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GEFS_2015-01-08T06.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GEFS_2015-01-08T06.00.00Z">
+            <gml:beginPosition>2015-01-08T06:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-14T06:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GEFS_2015-01-08T06.00.00Z">
+                <gml:timePosition>2015-01-08T06:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GEFS_2015-01-08T06.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GEFS_2015-01-08T06.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GEFS_2015-01-08T06.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GEFS_2015-01-08T06.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GEFS_2015-01-08T06.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T06.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T06.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T06.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T06.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T06.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T06.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GEFS_2015-01-08T12.00.00Z">
+    <metocean:coverageCollectionId>GEFS</metocean:coverageCollectionId>
+    <gml:name>GEFS Ensemble Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GEFS_2015-01-08T12.00.00Z">
+        <gml:timePosition>2015-01-08T12:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GEFS_2015-01-08T12.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GEFS_2015-01-08T12.00.00Z">
+            <gml:beginPosition>2015-01-08T12:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-14T12:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GEFS_2015-01-08T12.00.00Z">
+                <gml:timePosition>2015-01-08T12:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GEFS_2015-01-08T12.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GEFS_2015-01-08T12.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GEFS_2015-01-08T12.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>x
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GEFS_2015-01-08T12.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GEFS_2015-01-08T12.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T12.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T12.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T12.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T12.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T12.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T12.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GEFS_2015-01-08T18.00.00Z">
+    <metocean:coverageCollectionId>GEFS</metocean:coverageCollectionId>
+    <gml:name>GEFS Ensemble Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GEFS_2015-01-08T18.00.00Z">
+        <gml:timePosition>2015-01-08T18:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GEFS_2015-01-08T18.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GEFS_2015-01-08T18.00.00Z">
+            <gml:beginPosition>2015-01-08T18:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-14T18:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GEFS_2015-01-08T18.00.00Z">
+                <gml:timePosition>2015-01-08T18:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GEFS_2015-01-08T18.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GEFS_2015-01-08T18.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GEFS_2015-01-08T18.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GEFS_2015-01-08T18.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GEFS_2015-01-08T18.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T18.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T18.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T18.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T18.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T18.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-08T18.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GEFS_2015-01-09T00.00.00Z">
+    <metocean:coverageCollectionId>GEFS</metocean:coverageCollectionId>
+    <gml:name>GEFS Ensemble Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GEFS_2015-01-09T00.00.00Z">
+        <gml:timePosition>2015-01-09T00:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GEFS_2015-01-09T00.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GEFS_2015-01-09T00.00.00Z">
+            <gml:beginPosition>2015-01-09T00:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-15T00:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GEFS_2015-01-09T00.00.00Z">
+                <gml:timePosition>2015-01-09T00:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GEFS_2015-01-09T00.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GEFS_2015-01-09T00.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GEFS_2015-01-09T00.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GEFS_2015-01-09T00.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GEFS_2015-01-09T00.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-09T00.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-09T00.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-09T00.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-09T00.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-09T00.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GEFS_2015-01-09T00.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GFS_2015-01-08T00.00.00Z">
+    <metocean:coverageCollectionId>GFS</metocean:coverageCollectionId>
+    <gml:name>GFS Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GFS_2015-01-08T00.00.00Z">
+        <gml:timePosition>2015-01-08T00:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GFS_2015-01-08T00.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GFS_2015-01-08T00.00.00Z">
+            <gml:beginPosition>2015-01-08T00:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-16T00:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GFS_2015-01-08T00.00.00Z">
+                <gml:timePosition>2015-01-08T00:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GFS_2015-01-08T00.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GFS_2015-01-08T00.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GFS_2015-01-08T00.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GFS_2015-01-08T00.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GFS_2015-01-08T00.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_AMSL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/102">
+          <metocean:coverageDescription coverageDescription="Specific Altitude Above Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_ZeroIsotherm</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/4">
+          <metocean:coverageDescription coverageDescription="Level of 0å¡C Isotherm"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_MaxWind</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/6">
+          <metocean:coverageDescription coverageDescription="Maximum Wind Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_Tropopause</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/7">
+          <metocean:coverageDescription coverageDescription="Tropopause"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T00.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GFS_2015-01-08T06.00.00Z">
+    <metocean:coverageCollectionId>GFS</metocean:coverageCollectionId>
+    <gml:name>GFS Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GFS_2015-01-08T06.00.00Z">
+        <gml:timePosition>2015-01-08T06:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GFS_2015-01-08T06.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GFS_2015-01-08T06.00.00Z">
+            <gml:beginPosition>2015-01-08T06:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-16T06:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GFS_2015-01-08T06.00.00Z">
+                <gml:timePosition>2015-01-08T06:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GFS_2015-01-08T06.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GFS_2015-01-08T06.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GFS_2015-01-08T06.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GFS_2015-01-08T06.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GFS_2015-01-08T06.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_AMSL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/102">
+          <metocean:coverageDescription coverageDescription="Specific Altitude Above Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_ZeroIsotherm</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/4">
+          <metocean:coverageDescription coverageDescription="Level of 0å¡C Isotherm"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_MaxWind</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/6">
+          <metocean:coverageDescription coverageDescription="Maximum Wind Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_Tropopause</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/7">
+          <metocean:coverageDescription coverageDescription="Tropopause"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T06.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GFS_2015-01-08T12.00.00Z">
+    <metocean:coverageCollectionId>GFS</metocean:coverageCollectionId>
+    <gml:name>GFS Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GFS_2015-01-08T12.00.00Z">
+        <gml:timePosition>2015-01-08T12:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GFS_2015-01-08T12.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GFS_2015-01-08T12.00.00Z">
+            <gml:beginPosition>2015-01-08T12:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-16T12:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GFS_2015-01-08T12.00.00Z">
+                <gml:timePosition>2015-01-08T12:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GFS_2015-01-08T12.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GFS_2015-01-08T12.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GFS_2015-01-08T12.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GFS_2015-01-08T12.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GFS_2015-01-08T12.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_AMSL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/102">
+          <metocean:coverageDescription coverageDescription="Specific Altitude Above Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_ZeroIsotherm</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/4">
+          <metocean:coverageDescription coverageDescription="Level of 0å¡C Isotherm"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_MaxWind</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/6">
+          <metocean:coverageDescription coverageDescription="Maximum Wind Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_Tropopause</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/7">
+          <metocean:coverageDescription coverageDescription="Tropopause"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T12.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GFS_2015-01-08T18.00.00Z">
+    <metocean:coverageCollectionId>GFS</metocean:coverageCollectionId>
+    <gml:name>GFS Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GFS_2015-01-08T18.00.00Z">
+        <gml:timePosition>2015-01-08T18:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GFS_2015-01-08T18.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GFS_2015-01-08T18.00.00Z">
+            <gml:beginPosition>2015-01-08T18:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-16T18:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GFS_2015-01-08T18.00.00Z">
+                <gml:timePosition>2015-01-08T18:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GFS_2015-01-08T18.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GFS_2015-01-08T18.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GFS_2015-01-08T18.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GFS_2015-01-08T18.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GFS_2015-01-08T18.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_AMSL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/102">
+          <metocean:coverageDescription coverageDescription="Specific Altitude Above Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_ZeroIsotherm</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/4">
+          <metocean:coverageDescription coverageDescription="Level of 0å¡C Isotherm"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_MaxWind</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/6">
+          <metocean:coverageDescription coverageDescription="Maximum Wind Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_Tropopause</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/7">
+          <metocean:coverageDescription coverageDescription="Tropopause"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-08T18.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+  <metocean:CoverageCollectionDescription gml:id="CoverageCollectionDescription_GFS_2015-01-09T00.00.00Z">
+    <metocean:coverageCollectionId>GFS</metocean:coverageCollectionId>
+    <gml:name>GFS Model</gml:name>
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <metocean:referenceTime>
+      <gml:TimeInstant gml:id="NotionalStartTime_GFS_2015-01-09T00.00.00Z">
+        <gml:timePosition>2015-01-09T00:00:00Z</gml:timePosition>
+      </gml:TimeInstant>
+    </metocean:referenceTime>
+    <metocean:sourceObservationProperty>
+      <metocean:SourceObservation gml:id="so_GFS_2015-01-09T00.00.00Z">
+        <om:phenomenonTime>
+          <gml:TimePeriod gml:id="tp_ForecastTimeRange_GFS_2015-01-09T00.00.00Z">
+            <gml:beginPosition>2015-01-09T00:00:00Z</gml:beginPosition>
+            <gml:endPosition>2015-01-17T00:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </om:phenomenonTime>
+        <om:resultTime nilReason="unknown"/>
+        <om:procedure nilReason="inapplicable"/>
+        <om:parameter>
+          <om:NamedValue>
+            <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+            <om:value>
+              <gml:TimeInstant gml:id="referencetime_GFS_2015-01-09T00.00.00Z">
+                <gml:timePosition>2015-01-09T00:00:00Z</gml:timePosition>
+              </gml:TimeInstant>
+            </om:value>
+          </om:NamedValue>
+        </om:parameter>
+        <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+        <om:featureOfInterest>
+          <sams:SF_SpatialSamplingFeature gml:id="ss_GFS_2015-01-09T00.00.00Z">
+            <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+            <sam:sampledFeature>
+              <metocean:CoverageCollectionProperties gml:id="uuid.md_GFS_2015-01-09T00.00.00Z">
+                <gml:identifier codeSpace="urn:uuid:">md_GFS_2015-01-09T00.00.00Z</gml:identifier>
+                <metocean:geometryComponent>
+                  <metocean:CoverageCollectionDomain>
+                    <metocean:horizontalProjection>
+                      <gml:Polygon gml:id="boundary-geometry_GFS_2015-01-09T00.00.00Z" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                        <gml:exterior>
+                          <gml:LinearRing>
+                            <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                          </gml:LinearRing>
+                        </gml:exterior>
+                      </gml:Polygon>
+                    </metocean:horizontalProjection>
+                  </metocean:CoverageCollectionDomain>
+                </metocean:geometryComponent>
+              </metocean:CoverageCollectionProperties>
+            </sam:sampledFeature>
+            <sams:shape xlink:href="ss_GFS_2015-01-09T00.00.00Z"/>
+          </sams:SF_SpatialSamplingFeature>
+        </om:featureOfInterest>
+        <om:result/>
+      </metocean:SourceObservation>
+    </metocean:sourceObservationProperty>
+    <metocean:coverageIdList>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_ISBL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/100">
+          <metocean:coverageDescription coverageDescription="Isobaric Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_AGL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/103">
+          <metocean:coverageDescription coverageDescription="Specified Height Level Above Ground"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_AMSL</wcs:CoverageId>
+        <wcs:CoverageSubtype>VerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/102">
+          <metocean:coverageDescription coverageDescription="Specific Altitude Above Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_Ground</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/1">
+          <metocean:coverageDescription coverageDescription="Ground or Water Surface"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_MeanSea</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/101">
+          <metocean:coverageDescription coverageDescription="Mean Sea Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_ZeroIsotherm</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/4">
+          <metocean:coverageDescription coverageDescription="Level of 0å¡C Isotherm"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_MaxWind</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/6">
+          <metocean:coverageDescription coverageDescription="Maximum Wind Level"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_Tropopause</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/7">
+          <metocean:coverageDescription coverageDescription="Tropopause"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_AtmosphereTop</wcs:CoverageId>
+        <wcs:CoverageSubtype>ComputedSurface</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/8">
+          <metocean:coverageDescription coverageDescription="Nominal Top of the Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+      <wcs:CoverageSummary>
+        <wcs:CoverageId>GFS_2015-01-09T00.00.00Z_Atmosphere</wcs:CoverageId>
+        <wcs:CoverageSubtype>NoVerticalDependency</wcs:CoverageSubtype>
+        <ows:Metadata xlink:href="http://codes.wmo.int/grib2/codeflag/4.5/10">
+          <metocean:coverageDescription coverageDescription="Entire Atmosphere"/>
+        </ows:Metadata>
+      </wcs:CoverageSummary>
+    </metocean:coverageIdList>
+  </metocean:CoverageCollectionDescription>
+</metocean:CoverageCollectionDescriptions>
+

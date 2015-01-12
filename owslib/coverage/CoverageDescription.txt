@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wcs:CoverageDescriptions xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:wcs="http://www.opengis.net/wcs/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:gmlcov="http://www.opengis.net/gmlcov/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:om="http://www.opengis.net/om/2.0" xmlns:metocean="http://def.wmo.int/metce/2013/metocean" xmlns:metce="http://def.wmo.int/metce/2013" xmlns:sam="http://www.opengis.net/sampling/2.0" xmlns:sams="http://www.opengis.net/samplingSpatial/2.0" xmlns:gmlrgrid="http://www.opengis.net/gml/3.3/rgrid" xsi:schemaLocation="http://schemas.opengis.net/wcs/2.0 http://schemas.opengis.net/wcs/2.0/wcsAll.xsd http://def.wmo.int/metce/2013/metocean https://ogcie.iblsoft.com/schemas/wcs-2.0/wcsMetOceanDescribeCoverage.xsd">
+  <wcs:CoverageDescription gml:id="GFS_Latest_Ground">
+    <gml:boundedBy>
+      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+        <gml:upperCorner>180 90</gml:upperCorner>
+      </gml:Envelope>
+    </gml:boundedBy>
+    <wcs:CoverageId>GFS_Latest_Ground</wcs:CoverageId>
+    <gmlcov:metadata>
+      <gmlcov:Extension>
+        <metocean:extensionProperty>
+          <metocean:MetOceanCoverageMetadata>
+            <metocean:sourceObservationProperty>
+              <metocean:SourceObservation gml:id="so_GFS_Latest_Ground">
+                <om:phenomenonTime>
+                  <gml:TimePeriod gml:id="tp_ForecastTimeRange_GFS_Latest_Ground">
+                    <gml:beginPosition>2015-01-09T06:00:00Z</gml:beginPosition>
+                    <gml:endPosition>2015-01-17T06:00:00Z</gml:endPosition>
+                  </gml:TimePeriod>
+                </om:phenomenonTime>
+                <om:resultTime nilReason="unknown"/>
+                <om:procedure nilReason="inapplicable"/>
+                <om:parameter>
+                  <om:NamedValue>
+                    <om:name xlink:href="http://www.codes.wmo.int/GRIB2/table1.2/referenceTime"/>
+                    <om:value>
+                      <gml:TimeInstant gml:id="referencetime_GFS_Latest_Ground">
+                        <gml:timePosition>2015-01-09T06:00:00Z</gml:timePosition>
+                      </gml:TimeInstant>
+                    </om:value>
+                  </om:NamedValue>
+                </om:parameter>
+                <om:observedProperty xlink:href="http://codes.wmo.int/common/observation-type/METCE/2013/NWP_Model"/>
+                <om:featureOfInterest>
+                  <sams:SF_SpatialSamplingFeature gml:id="ss_GFS_Latest_Ground">
+                    <sam:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface"/>
+                    <sam:sampledFeature>
+                      <metocean:ModelDescription gml:id="uuid.md_GFS_Latest_Ground">
+                        <gml:identifier codeSpace="urn:uuid:">md_GFS_Latest_Ground</gml:identifier>
+                        <metocean:originatingcentre>unknown</metocean:originatingcentre>
+                        <metocean:modeltype>atmospheric</metocean:modeltype>
+                        <metocean:modelidentifier>GFS</metocean:modelidentifier>
+                        <metocean:geometryComponent>
+                          <metocean:ModelDomain>
+                            <metocean:horizontalProjection>
+                              <gml:Polygon gml:id="boundary-geometry_GFS_Latest_Ground" uomLabels="deg deg" axisLabels="Lat Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                                <gml:exterior>
+                                  <gml:LinearRing>
+                                    <gml:posList>-90 -180 90 -180 90 180 -90 180 -90 -180</gml:posList>
+                                  </gml:LinearRing>
+                                </gml:exterior>
+                              </gml:Polygon>
+                            </metocean:horizontalProjection>
+                          </metocean:ModelDomain>
+                        </metocean:geometryComponent>
+                      </metocean:ModelDescription>
+                    </sam:sampledFeature>
+                    <sams:shape xlink:href="ss_GFS_Latest_Ground"/>
+                  </sams:SF_SpatialSamplingFeature>
+                </om:featureOfInterest>
+                <om:result/>
+              </metocean:SourceObservation>
+            </metocean:sourceObservationProperty>
+            <metocean:dataMaskReferenceProperty>
+              <metocean:DataMaskReferenceMemberList>
+                <metocean:dataMaskReference fieldName="albedo" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="best-lifted-index" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="cape" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="categorical-freezing-rain" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="categorical-ice-pellets" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="categorical-rain" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="categorical-snow" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="convective-inhibition" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="convective-precipitation" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="convective-precipitation-rate" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="downward-long-wave-rad-flux" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="downward-short-wave-rad-flux" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="field-capacity" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="fire-outlook-dry-lightning-area" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="geopotential-height" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="ground-heat-flux" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="ice-cover" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="land-cover" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="latent-heat-net-flux" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="meridional-flux-of-gravity-wave-stress" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="momentum-flux" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="planetary-boundary-layer-height" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="potential-evaporation-rate" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="pressure" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="sensible-heat-net-flux" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="sunshine-duration" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="surface-lifted-index" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="temperature" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="total-precipitation" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="total-precipitation-rate" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="upward-long-wave-rad-flux" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="upward-short-wave-rad-flux" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="water-equivalent-of-accumulated-snow-depth" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="water-runoff" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="wilting-point" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="wind-speed" xlink:href="#maskId_GFS_Latest_Ground_2">maskId_GFS_Latest_Ground_2</metocean:dataMaskReference>
+                <metocean:dataMaskReference fieldName="zonal-flux-of-gravity-wave-stress" xlink:href="#maskId_GFS_Latest_Ground_1">maskId_GFS_Latest_Ground_1</metocean:dataMaskReference>
+              </metocean:DataMaskReferenceMemberList>
+            </metocean:dataMaskReferenceProperty>
+            <metocean:dataMaskProperty>
+              <metocean:DataMaskMemberList>
+                <metocean:dataMask maskName="albedo_and_20_others" gml:id="maskId_GFS_Latest_Ground_1">
+                  <gmlcov:ReferenceableGridCoverage gml:id="rgc_maskId_GFS_Latest_Ground_1">
+                    <gml:boundedBy>
+                      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+                        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+                        <gml:upperCorner>180 90</gml:upperCorner>
+                      </gml:Envelope>
+                    </gml:boundedBy>
+                    <gml:domainSet>
+                      <gmlrgrid:ReferenceableGridByArray gml:id="rgba_maskId_GFS_Latest_Ground_1" dimension="1" srsName="http://www.opengis.net/def/temporal/ISO8601" axisLabels="time" uomLabels="h">
+                        <gml:limits>
+                          <gml:GridEnvelope>
+                            <gml:low>3</gml:low>
+                            <gml:high>192</gml:high>
+                          </gml:GridEnvelope>
+                        </gml:limits>
+                        <gml:axisLabels>t</gml:axisLabels>
+                        <gml:posList>3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 66 72 78 84 90 96 102 108 114 120 132 144 156 168 180 192</gml:posList>
+                        <gmlrgrid:sequenceRule axisOrder="+1">Linear</gmlrgrid:sequenceRule>
+                      </gmlrgrid:ReferenceableGridByArray>
+                    </gml:domainSet>
+                    <gml:rangeSet>
+                      <gml:DataBlock>
+                        <gml:rangeParameters/>
+                        <gml:tupleList>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</gml:tupleList>
+                      </gml:DataBlock>
+                    </gml:rangeSet>
+                    <gmlcov:rangeType>
+                      <swe:DataRecord>
+                        <swe:field name="datacompletenessomission">
+                          <swe:Boolean>
+                            <swe:quality>
+                              <swe:Quantity>
+                                <swe:uom></swe:uom>
+                                <swe:constraint></swe:constraint>
+                                <swe:value>1.0</swe:value>
+                              </swe:Quantity>
+                            </swe:quality>
+                            <swe:nilValues>
+                              <swe:NilValues>
+                                <swe:nilValue reason="http://www.opengis.net/def/crs/EPSG/0/4326"/>
+                              </swe:NilValues>
+                            </swe:nilValues>
+                            <swe:value>0</swe:value>
+                          </swe:Boolean>
+                        </swe:field>
+                      </swe:DataRecord>
+                    </gmlcov:rangeType>
+                  </gmlcov:ReferenceableGridCoverage>
+                </metocean:dataMask>
+                <metocean:dataMask maskName="best-lifted-index_and_15_others" gml:id="maskId_GFS_Latest_Ground_2">
+                  <gmlcov:ReferenceableGridCoverage gml:id="rgc_maskId_GFS_Latest_Ground_2">
+                    <gml:boundedBy>
+                      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
+                        <gml:lowerCorner>-180 -90</gml:lowerCorner>
+                        <gml:upperCorner>180 90</gml:upperCorner>
+                      </gml:Envelope>
+                    </gml:boundedBy>
+                    <gml:domainSet>
+                      <gmlrgrid:ReferenceableGridByArray gml:id="rgba_maskId_GFS_Latest_Ground_2" dimension="1" srsName="http://www.opengis.net/def/temporal/ISO8601" axisLabels="time" uomLabels="h">
+                        <gml:limits>
+                          <gml:GridEnvelope>
+                            <gml:low>0</gml:low>
+                            <gml:high>192</gml:high>
+                          </gml:GridEnvelope>
+                        </gml:limits>
+                        <gml:axisLabels>t</gml:axisLabels>
+                        <gml:posList>0 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 54 60 66 72 78 84 90 96 102 108 114 120 132 144 156 168 180 192</gml:posList>
+                        <gmlrgrid:sequenceRule axisOrder="+1">Linear</gmlrgrid:sequenceRule>
+                      </gmlrgrid:ReferenceableGridByArray>
+                    </gml:domainSet>
+                    <gml:rangeSet>
+                      <gml:DataBlock>
+                        <gml:rangeParameters/>
+                        <gml:tupleList>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</gml:tupleList>
+                      </gml:DataBlock>
+                    </gml:rangeSet>
+                    <gmlcov:rangeType>
+                      <swe:DataRecord>
+                        <swe:field name="datacompletenessomission">
+                          <swe:Boolean>
+                            <swe:quality>
+                              <swe:Quantity>
+                                <swe:uom></swe:uom>
+                                <swe:constraint></swe:constraint>
+                                <swe:value>1.0</swe:value>
+                              </swe:Quantity>
+                            </swe:quality>
+                            <swe:nilValues>
+                              <swe:NilValues>
+                                <swe:nilValue reason="http://www.opengis.net/def/crs/EPSG/0/4326"/>
+                              </swe:NilValues>
+                            </swe:nilValues>
+                            <swe:value>0</swe:value>
+                          </swe:Boolean>
+                        </swe:field>
+                      </swe:DataRecord>
+                    </gmlcov:rangeType>
+                  </gmlcov:ReferenceableGridCoverage>
+                </metocean:dataMask>
+              </metocean:DataMaskMemberList>
+            </metocean:dataMaskProperty>
+          </metocean:MetOceanCoverageMetadata>
+        </metocean:extensionProperty>
+      </gmlcov:Extension>
+    </gmlcov:metadata>
+    <gml:domainSet>
+      <gml:RectifiedGrid dimension="2" gml:id="GFS_Latest_Ground_grid">
+        <gml:limits>
+          <gml:GridEnvelope>
+            <gml:low>0 0</gml:low>
+            <gml:high>719 360</gml:high>
+          </gml:GridEnvelope>
+        </gml:limits>
+        <gml:axisName>x</gml:axisName>
+        <gml:axisName>y</gml:axisName>
+        <gml:origin>
+          <gml:Point srsName="EPSG:4326" gml:id="GFS_Latest_Ground_grid_origin">
+            <gml:coordinates>0 -90</gml:coordinates>
+          </gml:Point>
+        </gml:origin>
+        <gml:offsetVector srsName="EPSG:4326">0.5 7.0467596052536985</gml:offsetVector>
+        <gml:offsetVector srsName="EPSG:4326">0 14.573944878270581</gml:offsetVector>
+      </gml:RectifiedGrid>
+    </gml:domainSet>
+    <gmlcov:rangeType/>
+    <wcs:ServiceParameters>
+      <wcs:CoverageSubtype>RectifiedDataset</wcs:CoverageSubtype>
+      <wcs:nativeFormat>image/tiff</wcs:nativeFormat>
+    </wcs:ServiceParameters>
+  </wcs:CoverageDescription>
+</wcs:CoverageDescriptions>
