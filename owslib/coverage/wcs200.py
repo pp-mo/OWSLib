@@ -25,7 +25,15 @@ from owslib.coverage import wcsdecoder
 from owslib.crs import Crs
 
 import logging
-from owslib.util import log
+#from owslib.util import log
+
+class local_log(object):
+    def debug(self, string):
+        print('DEBUG: ', string)
+#        if not string.startswith('WCS'):
+#            raise Exception()
+
+log = local_log()
 
 from owslib.etree import etree
 
@@ -35,20 +43,39 @@ def ns(tag):
 from owslib.namespaces import Namespaces
 from owslib.util import nspath_eval
 
-# Create useful namespace lookup dictionaries.
+# Define useful namespace lookup dictionaries.
 WCS_names = Namespaces().get_namespaces(['wcs', 'wcs20', 'ows', 'ows200'])
 WCS_names['wcs20ows'] = WCS_names['wcs20'] + '/ows'
-GML_names = {'gml': 'http://www.opengis.net/gml/3.2'}
-MO_names = {'meto': 'http://def.wmo.int/metce/2013/metocean'}
 
 VERSION = '2.0.0'
 
 
 def find_element(document, name, namespaces):
     """
-    Find an element in a document given some possible namespaces.
-    
-    e.g. find_element(capabilities, 'ServiceIdentification', ['ows200', 'wcs200ows'])
+    Find an element in a document which may be in any of several namespaces.
+
+    Args:
+
+    * document (etree):
+        An xml fragment.
+    * name (string):
+        A tagname to search for.
+    * namespaces (string or list of string):
+        A set of namespace aliasses.
+
+    Return the first match using any of the given namespaces in WCS_names.
+
+    For example:
+
+        find_element(capabilities, 'ServiceIdentification',
+                     ['ows200', 'wcs20ows'])
+
+        This will match either:
+        * 'http://www.opengis.net/ows/2.0:ServiceIdentification'
+            (aka 'ows200:ServiceIdentification'), *or*
+        *  'http://www.opengis.net/wcs/2.0/ows:ServiceIdentification'
+            (aka 'wcs20ows:ServiceIdentification').
+
     """
     if isinstance(namespaces, basestring):
         namespaces = [namespaces]
@@ -60,9 +87,15 @@ def find_element(document, name, namespaces):
 
 
 class WCSExtension(object):
+    # This class variable contains the sub-types of this that have been
+    # defined, as {<xml_tagname>: <representing_class>}.
+    all_subtypes = {}
+
+    TAG = None
+
     def __init__(self):
-        pass
-    
+        raise NotImplementedError()
+
     @classmethod
     def from_xml(cls, element, service):
         """
@@ -71,98 +104,11 @@ class WCSExtension(object):
         """
         raise NotImplementedError()
 
-    registered_extensions = {}
-
-
-class MetOceanCoverageCollection(WCSExtension):
-    def __init__(self, service, coverage_collection_id, envelope=None, reference_times=None):
-        #: The WebCoverageService instance that created this CoverageCollection.
-        self.service = service
-
-        self.coverage_collection_id = coverage_collection_id
-        self.envelope = envelope
-        self.reference_times = reference_times
-
-    @classmethod
-    def from_xml(cls, element, service):
-        get_text = lambda elem: elem.text
-        element_mapping = {'{{{meto}}}coverageCollectionId'.format(**MO_names): ['coverage_collection_id', get_text],
-                           # The latest spect states that there will be an envelope at this level, but the test server has a boundedBy parenting the envelope.
-                           '{{{gml}}}boundedBy'.format(**GML_names): ['envelope', GMLBoundedBy.from_xml],
-                           '{{{meto}}}referenceTimeList'.format(**MO_names): ['reference_times', ReferenceTimes.from_xml]}
-        keywords = {'service': service}
-        for child in element:
-            if child.tag in element_mapping:
-                keyword_name, element_fn = element_mapping[child.tag]
-                keywords[keyword_name] = element_fn(child)
-            else:
-                log.debug('Coverage tag {} not found.'.format(child.tag))
-                print('unknown_tag', child.tag)
-        try:
-            return cls(**keywords)
-        except:
-            print('Tried to initialise {} with {}'.format(cls, keywords))
-            raise
-
-    def describe(self):
-        """
-        Request describeCoverageCollection for this collection.
-
-        """
-        service = self.service
-        coverage_collection = self.service.find_operation('DescribeCoverageCollection')
-        base_url = coverage_collection.href_via('HTTP', 'Get')
-
-        #process kwargs
-        request = {'version': service.version,
-                   'request': 'DescribeCoverageCollection',
-                   'service':'WCS',
-                   '{{{meto}}}coverageCollectionId'.format(**MO_names): self.coverage_collection_id}
-        #encode and request
-        data = urlencode(request)
-
-        return openURL(base_url, data, 'Get', service.cookies)
-
-# Register the MetOcean extension.
-WCSExtension.registered_extensions['{http://def.wmo.int/metce/2013/metocean}CoverageCollectionSummary'] = MetOceanCoverageCollection.from_xml
-
-
-class ReferenceTimes(object):
-    def __init__(self, times):
-        self.times = times
-
-    @classmethod
-    def from_xml(cls, element):
-        #print('REFTIME-fromxml:', type(element), repr(element))
-        content, = element.findall('meto:ReferenceTime', namespaces=MO_names)
-        children = content.findall('gml:timePosition', namespaces=GML_names)
-        times = [child.text for child in content]
-        print(times)
-        return cls(times)
-
-
-class GMLEnvelope(object):
-    def __init__(self, times):
-        return None
-        self.name = name
-        self.labels = labels
-        self.units = units
-        self.dimension = dimension
-        self.lower_corner = lower_corner
-        self.upper_corner = upper_corner
-
-    @classmethod
-    def from_xml(cls, element):
-        
-        return cls(element)
-
-
-class GMLBoundedBy(object):
-    @classmethod
-    def from_xml(cls, element):
-        # This is a dumb class which just returns its only child (this is removed
-        # from the spec in later revisions, but is still in place on the test server).
-        return GMLEnvelope.from_xml(element[0])
+    @staticmethod
+    def register_wcs_extension_subtype(extension_subclass):
+        # Register a class as representing a WCSExtension sub-type.
+        # (N.B. the class should define a 'from_xml' like the above stub).
+        WCSExtension.all_subtypes[extension_subclass.TAG] = extension_subclass
 
 
 class CoverageSummary(object):
@@ -182,7 +128,7 @@ class CoverageSummary(object):
             if child.tag in element_mapping:
                 keywords[element_mapping[child.tag]] = child.text
             else:
-                log.debug('Coverage tag {} not found.'.format(child.tag))
+                log.debug('Coverage tag {} not supported.'.format(child.tag))
         return cls(**keywords)
     
     def describe(self):
@@ -273,11 +219,12 @@ class WebCoverageService_2_0_0(WCSBase):
         self.contents_extensions = []
         for content_extensions in contents.findall('wcs20:Extension', namespaces=WCS_names):
             for extension in content_extensions:
-                if extension.tag not in WCSExtension.registered_extensions:
+                if extension.tag not in WCSExtension.all_subtypes:
                     print('FAIL:', extension.tag)
                     log.debug('Unsupported content extension: {}'.format(extension.tag))
                 else:
-                    extension = WCSExtension.registered_extensions[extension.tag](extension, self)
+                    cls = WCSExtension.all_subtypes[extension.tag]
+                    extension = cls.from_xml(extension, self)
                     self.contents_extensions.append(extension)
 
     def _raw_capabilities(self):
@@ -490,172 +437,3 @@ class ContactMetadata(object):
             self.email =            elem.find('{http://www.opengis.net/ows}ServiceContact/{http://www.opengis.net/ows}ContactInfo/{http://www.opengis.net/ows}Address/{http://www.opengis.net/ows}ElectronicMailAddress').text
         except AttributeError:
             self.email = None
-
-
-class ContentMetadata(object):
-    """Abstraction for WCS ContentMetadata
-    Implements IContentMetadata
-    """
-    def __init__(self, elem, parent, service):
-        """Initialize."""
-        #TODO - examine the parent for bounding box info.
-        
-        self._service=service
-        self._elem=elem
-        self._parent=parent
-        self.id=self._checkChildAndParent('{http://www.opengis.net/wcs/1.1}Identifier')
-        self.description =self._checkChildAndParent('{http://www.opengis.net/wcs/1.1}Description')           
-        self.title =self._checkChildAndParent('{http://www.opengis.net/ows}Title')
-        self.abstract =self._checkChildAndParent('{http://www.opengis.net/ows}Abstract')
-        
-        #keywords.
-        self.keywords=[]
-        for kw in elem.findall('{http://www.opengis.net/ows}Keywords/{http://www.opengis.net/ows}Keyword'):
-            if kw is not None:
-                self.keywords.append(kw.text)
-        
-        #also inherit any keywords from parent coverage summary (if there is one)
-        if parent is not None:
-            for kw in parent.findall('{http://www.opengis.net/ows}Keywords/{http://www.opengis.net/ows}Keyword'):
-                if kw is not None:
-                    self.keywords.append(kw.text)
-            
-        self.boundingBox=None #needed for iContentMetadata harmonisation
-        self.boundingBoxWGS84 = None
-        b = elem.find('{http://www.opengis.net/ows}WGS84BoundingBox')
-        if b is not None:
-            lc=b.find('{http://www.opengis.net/ows}LowerCorner').text
-            uc=b.find('{http://www.opengis.net/ows}UpperCorner').text
-            self.boundingBoxWGS84 = (
-                    float(lc.split()[0]),float(lc.split()[1]),
-                    float(uc.split()[0]), float(uc.split()[1]),
-                    )
-                
-        # bboxes - other CRS 
-        self.boundingboxes = []
-        for bbox in elem.findall('{http://www.opengis.net/ows}BoundingBox'):
-            if bbox is not None:
-                try:
-                    lc=b.find('{http://www.opengis.net/ows}LowerCorner').text
-                    uc=b.find('{http://www.opengis.net/ows}UpperCorner').text
-                    boundingBox =  (
-                            float(lc.split()[0]),float(lc.split()[1]),
-                            float(uc.split()[0]), float(uc.split()[1]),
-                            b.attrib['crs'])
-                    self.boundingboxes.append(boundingBox)
-                except:
-                     pass
-
-        #others not used but needed for iContentMetadata harmonisation
-        self.styles=None
-        self.crsOptions=None
-                
-        #SupportedCRS
-        self.supportedCRS=[]
-        for crs in elem.findall('{http://www.opengis.net/wcs/1.1}SupportedCRS'):
-            self.supportedCRS.append(Crs(crs.text))
-            
-            
-        #SupportedFormats         
-        self.supportedFormats=[]
-        for format in elem.findall('{http://www.opengis.net/wcs/1.1}SupportedFormat'):
-            self.supportedFormats.append(format.text)
-            
-    #grid is either a gml:Grid or a gml:RectifiedGrid if supplied as part of the DescribeCoverage response.
-    def _getGrid(self):
-        grid=None
-        #TODO- convert this to 1.1 from 1.0
-        #if not hasattr(self, 'descCov'):
-                #self.descCov=self._service.getDescribeCoverage(self.id)
-        #gridelem= self.descCov.find(ns('CoverageOffering/')+ns('domainSet/')+ns('spatialDomain/')+'{http://www.opengis.net/gml}RectifiedGrid')
-        #if gridelem is not None:
-            #grid=RectifiedGrid(gridelem)
-        #else:
-            #gridelem=self.descCov.find(ns('CoverageOffering/')+ns('domainSet/')+ns('spatialDomain/')+'{http://www.opengis.net/gml}Grid')
-            #grid=Grid(gridelem)
-        return grid
-    grid=property(_getGrid, None)
-
-# xmlns:ns4="http://def.wmo.int/metce/2013/metocean"
-# xmlns:ows200="http://www.opengis.net/ows/2.0"
-# xmlns:wcs20="http://www.opengis.net/wcs/2.0"
-# xmlns:xlink="http://www.w3.org/1999/xlink"
-# xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-# version="2.0.0" xsi:schemaLocation="http://schemas.opengis.net/wcs/2.0 http://schemas.opengis.net/wcs/2.0/wcsAll.xsd http://def.wmo.int/metce/2013/metocean
-# https://ogcie.iblsoft.com/schemas/wcs-2.0/wcsMetOceanGetCapabilities.xsd">
-#   <ows200:ServiceIdentification>
-
-
-# Lon" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
-#                         <gml:exterior>
-
-# https://ogcie.iblsoft.com/metocean/wcs?Service=WCS&Version=2.0.0&Format=JSON&Request=GetCoverage&CoverageID=GFS_Latest_Ground&
-# RangeSubset=total-precipitation-rate&Size=t(7)&Subset=lat(50.718412)&
-# Subset=long(-3.5338990000000194)&Subset=t(%222015-01-09T14%3A00%3A00.000Z%22%2C%222015-01-09T20%3A00%3A00.000Z%22)&
-# Interpolation=lat(linear)&Interpolation=long(linear)&Interpolation=t(linear)
-
-coverage_request_example = """
-<?xml version="1.0" encoding="UTF-8"?>
-<wcs2:GetCoverage xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:wcs2="http://www.opengis.net/wcs/2.0"
-    xmlns:wcsCRS="http://www.opengis.net/wcs_service-extension_crs/1.0"
-    xmlns:int="http://www.opengis.net/WCS_service-extension_interpolation/1.0"
-    xmlns:rsub="http://www.opengis.net/wcs/range-subsetting/1.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:metocean="http://def.wmo.int/metce/2013/metocean"
-    service="WCS" version="2.0.0"
-    xsi:schemaLocation="http://www.opengis.net/wcs/2.0 http://schemas.opengis.net/wcs/2.0/wcsGetCoverage.xsd
-    http://www.opengis.net/wcs/crs/1.0 https://raw.github.com/EOxServer/schemas/master/wcs/crs/1.0/wcsCrs.xsd
-    http://www.opengis.net/wcs/range-subsetting/1.0 https://raw.github.com/EOxServer/schemas/master/wcs/range-subsetting/1.0/rsub.xsd">
-    
-    <wcs2:Extension>
-        <rsub:rangeSubset>
-            <rsub:rangeComponent>UKMO_Global_Temperature</rsub:rangeComponent>
-        </rsub:rangeSubset>
-        <wcsCRS:GetCoverageCrs>
-            <wcsCRS:subsettingCrs>
-                http://www.opengis.net/def/crs-combine?
-                1=CRS:84&amp;
-                2=http://www.codes.wmo.int/GRIB2/table4.5/IsobaricSurface&amp;
-                3=gml:TimeInstant
-            </wcsCRS:subsettingCrs>
-        </wcsCRS:GetCoverageCrs>
-    </wcs2:Extension>
-    <wcs2:CoverageId>UKMO_Global_2015-01-12T06.00.00Z_AGL</wcs2:CoverageId>
-    <metocean:DimensionSlice>
-        <wcs2:Dimension>lat</wcs2:Dimension>
-        <metocean:SlicePoint uomLabels="Deg">51.0</metocean:SlicePoint>
-    </metocean:DimensionSlice>
-    <metocean:DimensionSlice>
-        <wcs2:Dimension>long</wcs2:Dimension>
-        <metocean:SlicePoint uomLabels="Deg">-2.0</metocean:SlicePoint>
-    </metocean:DimensionSlice>
-    <wcs2:format>NetCDF3</wcs2:format>
-</wcs2:GetCoverage>
-""".strip()
-
-def main():
-#    wcs = WebCoverageService_2_0_0('https://ogcie.iblsoft.com/metocean/wcs')
-    wcs = WebCoverageService_2_0_0('http://exxvmviswxaftsing02:8008/GlobalWCSService')
-    print(wcs.contents.keys())
-    print(wcs.contents_extensions)
-    print([op.name for op in wcs.operations])
-    
-#     print(wcs._raw_capabilities())
-    coverage_collections = {ext.coverage_collection_id: ext
-                            for ext in wcs.contents_extensions
-                            if isinstance(ext, MetOceanCoverageCollection)}
-    print(coverage_collections)
-#     print(coverage_collections['GFS'].describe().read())
-#     print(wcs.contents_extensions[0].describe().read())
-#     print(wcs.contents['GFS_Latest_ISBL'].describe().read())
-    import tempfile
-    with tempfile.NamedTemporaryFile('wb', prefix='wcs.', suffix='.nc', delete=False) as fh:
-        fh.write(wcs.getCoverage_xml(coverage_request_example))
-    
-    print(fh.name)
-#     os.unlink(fh.name)
-
-
-if __name__ == '__main__':
-    main()
