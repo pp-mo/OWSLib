@@ -52,7 +52,7 @@ VERSION = '2.0.0'
 
 def find_element(document, name, namespaces):
     """
-    Find an element in a document which may be in any of several namespaces.
+    Find an element in a document with multiple aliases for its namespace.
 
     Args:
 
@@ -84,31 +84,6 @@ def find_element(document, name, namespaces):
         if elem is not None:
             return elem
     raise ValueError('Element {} not found.'.format(name))
-
-
-class WCSExtension(object):
-    # This class variable contains the sub-types of this that have been
-    # defined, as {<xml_tagname>: <representing_class>}.
-    all_subtypes = {}
-
-    TAG = None
-
-    def __init__(self):
-        raise NotImplementedError()
-
-    @classmethod
-    def from_xml(cls, element, service):
-        """
-        Given the XML dom object, and the service from whence it came,
-        construct an extension instance.
-        """
-        raise NotImplementedError()
-
-    @staticmethod
-    def register_wcs_extension_subtype(extension_subclass):
-        # Register a class as representing a WCSExtension sub-type.
-        # (N.B. the class should define a 'from_xml' like the above stub).
-        WCSExtension.all_subtypes[extension_subclass.TAG] = extension_subclass
 
 
 class CoverageSummary(object):
@@ -156,6 +131,11 @@ class WebCoverageService_2_0_0(WCSBase):
     Implements IWebCoverageService.
 
     """
+    # Define which concepts will be recognised within the Extension block of a
+    # capabilities response.
+    # This is a dictionary {<xml-tag>: <object-builder-class>}
+    recognised_capability_extensions = {}
+
     def __getitem__(self, name):
         ''' check contents dictionary to allow dict like access to service layers'''
         if name in self.__getattribute__('contents').keys():
@@ -172,6 +152,10 @@ class WebCoverageService_2_0_0(WCSBase):
         self.version = VERSION
         self.url = url
 
+        def absent(name):
+            log.debug('WCS 2.0.0 DEBUG: '
+                      'capabilities contains no {} component.'.format(name))
+
         # initialize from saved capability document or access the server
         reader = WCSCapabilitiesReader(self.version)
 
@@ -187,45 +171,59 @@ class WebCoverageService_2_0_0(WCSBase):
             err_message = str(se.text).strip()
             raise ServiceException(err_message, xml)
 
-        #build metadata objects:
-        #serviceIdentification metadata
+        # build metadata objects
+
+        # serviceIdentification metadata : may be absent
 #         print(etree.tostring(self._capabilities, encoding='utf8', method='xml'))
         service = find_element(self._capabilities, 'ServiceIdentification',
                                ['ows200', 'wcs20ows', 'wcs20'])
-        self.identification=ServiceIdentification(service)
+        if service is None:
+            self.identification = None
+            absent('ServiceIdentification')
+        else:
+            self.identification = ServiceIdentification(service)
 
-        #serviceProvider
+        # serviceProvider : may be absent.
         try:
             provider = find_element(self._capabilities, 'ServiceProvider',
                                     ['ows200'])
         except ValueError:
-            log.debug('WCS 2.0.0 DEBUG: No service provider identified.')
+            self.provider = None
+            absent('ServiceProvider')
         else:
             self.provider = ServiceProvider(provider)
 
-        #serviceOperations
-        self.operations = []
-        for operation in self._capabilities.find('ows200:OperationsMetadata',
-                                                 namespaces=WCS_names):
-            self.operations.append(Operation(operation))
+        # serviceOperations : may be absent, else contains a list of Operation.
+        operations = self._capabilities.find('ows200:OperationsMetadata',
+                                             namespaces=WCS_names)
+        if operations is None:
+            self.operations = []
+            absent('OperationsMetadata')
+        else:
+            self.operations = [Operation(operation)
+                               for operation in operations]
 
+        # contents : may be absent
         contents = self._capabilities.find('wcs20:Contents', namespaces=WCS_names)
-
         self.contents = {}
-        for coverage in contents.findall('wcs20:CoverageSummary', namespaces=WCS_names):
-            coverage = CoverageSummary.from_xml(coverage, self)
-            self.contents[coverage.coverage_id] = coverage
-
         self.contents_extensions = []
-        for content_extensions in contents.findall('wcs20:Extension', namespaces=WCS_names):
-            for extension in content_extensions:
-                if extension.tag not in WCSExtension.all_subtypes:
-                    print('FAIL:', extension.tag)
-                    log.debug('Unsupported content extension: {}'.format(extension.tag))
-                else:
-                    cls = WCSExtension.all_subtypes[extension.tag]
-                    extension = cls.from_xml(extension, self)
-                    self.contents_extensions.append(extension)
+        if contents is None:
+            absent('Contents')
+        else:
+            for coverage in contents.findall('wcs20:CoverageSummary', namespaces=WCS_names):
+                coverage = CoverageSummary.from_xml(coverage, self)
+                self.contents[coverage.coverage_id] = coverage
+
+            # any extensions
+            for content_extensions in contents.findall('wcs20:Extension', namespaces=WCS_names):
+                for extension in content_extensions:
+                    recognised_types = WebCoverageService_2_0_0.recognised_capability_extensions
+                    if extension.tag not in recognised_types:
+                        log.debug('Unsupported content extension : {}'.format(extension.tag))
+                    else:
+                        cls = recognised_types[extension.tag]
+                        extension = cls.from_xml(extension, self)
+                        self.contents_extensions.append(extension)
 
     def _raw_capabilities(self):
         return etree.tostring(self._capabilities, encoding='utf8', method='xml')
