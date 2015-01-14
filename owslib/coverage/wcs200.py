@@ -329,8 +329,9 @@ class Operation(object):
     """
     def __init__(self, elem):
         self.name = elem.get('name')
-        self.formatOptions = [f.text for f in elem.findall('wcs20ows:Parameter/wcs20ows:AllowedValues/wcs20ows:Value',
-                                                           namespaces=WCS_names)]
+        self.formatOptions = [f.text for f in elem.findall(
+            'wcs20ows:Parameter/wcs20ows:AllowedValues/wcs20ows:Value/ows200:AllowedValues',
+            namespaces=WCS_names)]
         methods = []
         for verb in elem.findall('ows200:DCP/ows200:HTTP/*', namespaces=WCS_names):
             url = verb.attrib['{http://www.w3.org/1999/xlink}href']
@@ -358,6 +359,8 @@ class ServiceIdentification(object):
         self.title=testXMLValue(elem.find('{http://www.opengis.net/ows}Title'))
         if self.title is None:  #may have used the wcs ows namespace:
             self.title=testXMLValue(elem.find('{http://www.opengis.net/wcs/1.1/ows}Title'))
+        if self.title is None:  #may have used the ows200 namespace:
+            self.title=testXMLValue(elem.find('{http://www.opengis.net/ows/2.0}Title'))
         
         self.abstract=testXMLValue(elem.find('{http://www.opengis.net/ows}Abstract'))
         if self.abstract is None:#may have used the wcs ows namespace:
