@@ -35,9 +35,11 @@ def ns(tag):
 from owslib.namespaces import Namespaces
 from owslib.util import nspath_eval
 
-WCS_namespaces = Namespaces().get_namespaces(['wcs', 'wcs20', 'ows', 'ows200'])
-WCS_namespaces['wcs20ows'] = WCS_namespaces['wcs20'] + '/ows'
-
+# Create useful namespace lookup dictionaries.
+WCS_names = Namespaces().get_namespaces(['wcs', 'wcs20', 'ows', 'ows200'])
+WCS_names['wcs20ows'] = WCS_names['wcs20'] + '/ows'
+GML_names = {'gml': 'http://www.opengis.net/gml/3.2'}
+MO_names = {'meto': 'http://def.wmo.int/metce/2013/metocean'}
 
 VERSION = '2.0.0'
 
@@ -51,7 +53,7 @@ def find_element(document, name, namespaces):
     if isinstance(namespaces, basestring):
         namespaces = [namespaces]
     for ns in namespaces:
-        elem = document.find('{}:{}'.format(ns, name), namespaces=WCS_namespaces)
+        elem = document.find('{}:{}'.format(ns, name), namespaces=WCS_names)
         if elem is not None:
             return elem
     raise ValueError('Element {} not found.'.format(name))
@@ -73,8 +75,6 @@ class WCSExtension(object):
 
 
 class MetOceanCoverageCollection(WCSExtension):
-    WCS_namespaces['WCSmetOcean'] = 'http://def.wmo.int/metce/2013/metocean'
-
     def __init__(self, service, coverage_collection_id, envelope=None, reference_times=None):
         #: The WebCoverageService instance that created this CoverageCollection.
         self.service = service
@@ -86,10 +86,10 @@ class MetOceanCoverageCollection(WCSExtension):
     @classmethod
     def from_xml(cls, element, service):
         get_text = lambda elem: elem.text
-        element_mapping = {'{{{WCSmetOcean}}}coverageCollectionId'.format(**WCS_namespaces): ['coverage_collection_id', get_text],
+        element_mapping = {'{{{meto}}}coverageCollectionId'.format(**MO_names): ['coverage_collection_id', get_text],
                            # The latest spect states that there will be an envelope at this level, but the test server has a boundedBy parenting the envelope.
-                           '{{{gml32}}}boundedBy'.format(**WCS_namespaces): ['envelope', GMLBoundedBy.from_xml],
-                           '{{{WCSmetOcean}}}referenceTimeList'.format(**WCS_namespaces): ['reference_times', ReferenceTimes.from_xml]}
+                           '{{{gml}}}boundedBy'.format(**GML_names): ['envelope', GMLBoundedBy.from_xml],
+                           '{{{meto}}}referenceTimeList'.format(**MO_names): ['reference_times', ReferenceTimes.from_xml]}
         keywords = {'service': service}
         for child in element:
             if child.tag in element_mapping:
@@ -117,7 +117,7 @@ class MetOceanCoverageCollection(WCSExtension):
         request = {'version': service.version,
                    'request': 'DescribeCoverageCollection',
                    'service':'WCS',
-                   '{{{WCSmetOcean}}}coverageCollectionId'.format(**WCS_namespaces): self.coverage_collection_id}
+                   '{{{meto}}}coverageCollectionId'.format(**MO_names): self.coverage_collection_id}
         #encode and request
         data = urlencode(request)
 
@@ -128,23 +128,20 @@ WCSExtension.registered_extensions['{http://def.wmo.int/metce/2013/metocean}Cove
 
 
 class ReferenceTimes(object):
-    WCS_namespaces['gml32'] = "http://www.opengis.net/gml/3.2"
-    WCS_namespaces['WCSmetOcean'] = 'http://def.wmo.int/metce/2013/metocean'
     def __init__(self, times):
         self.times = times
 
     @classmethod
     def from_xml(cls, element):
         #print('REFTIME-fromxml:', type(element), repr(element))
-        content, = element.findall('WCSmetOcean:ReferenceTime', namespaces=WCS_namespaces)
-        children = content.findall('gml32:timePosition', namespaces=WCS_namespaces)
+        content, = element.findall('meto:ReferenceTime', namespaces=MO_names)
+        children = content.findall('gml:timePosition', namespaces=GML_names)
         times = [child.text for child in content]
         print(times)
         return cls(times)
 
 
 class GMLEnvelope(object):
-    WCS_namespaces['gml32'] = "http://www.opengis.net/gml/3.2"
     def __init__(self, times):
         return None
         self.name = name
@@ -176,8 +173,8 @@ class CoverageSummary(object):
 
     @classmethod
     def from_xml(cls, element, service):
-        keywords = {'coverage_id': '{{{wcs20}}}CoverageId'.format(**WCS_namespaces),
-                    'subtype': '{{{wcs20}}}CoverageSubtype'.format(**WCS_namespaces)}
+        keywords = {'coverage_id': '{{{wcs20}}}CoverageId'.format(**WCS_names),
+                    'subtype': '{{{wcs20}}}CoverageSubtype'.format(**WCS_names)}
         element_mapping = {identifier: keyword_name
                            for keyword_name, identifier in keywords.items()}
         keywords['service'] = service
@@ -238,7 +235,7 @@ class WebCoverageService_2_0_0(WCSBase):
             self._capabilities = reader.read(self.url)
 
         # check for exceptions
-        se = self._capabilities.find('wcs20:Exception', namespaces=WCS_namespaces)
+        se = self._capabilities.find('wcs20:Exception', namespaces=WCS_names)
 
         if se is not None:
             err_message = str(se.text).strip()
@@ -263,18 +260,18 @@ class WebCoverageService_2_0_0(WCSBase):
         #serviceOperations
         self.operations = []
         for operation in self._capabilities.find('ows200:OperationsMetadata',
-                                                 namespaces=WCS_namespaces):
+                                                 namespaces=WCS_names):
             self.operations.append(Operation(operation))
 
-        contents = self._capabilities.find('wcs20:Contents', namespaces=WCS_namespaces)
+        contents = self._capabilities.find('wcs20:Contents', namespaces=WCS_names)
 
         self.contents = {}
-        for coverage in contents.findall('wcs20:CoverageSummary', namespaces=WCS_namespaces):
+        for coverage in contents.findall('wcs20:CoverageSummary', namespaces=WCS_names):
             coverage = CoverageSummary.from_xml(coverage, self)
             self.contents[coverage.coverage_id] = coverage
 
         self.contents_extensions = []
-        for content_extensions in contents.findall('wcs20:Extension', namespaces=WCS_namespaces):
+        for content_extensions in contents.findall('wcs20:Extension', namespaces=WCS_names):
             for extension in content_extensions:
                 if extension.tag not in WCSExtension.registered_extensions:
                     print('FAIL:', extension.tag)
@@ -388,9 +385,9 @@ class Operation(object):
     def __init__(self, elem):
         self.name = elem.get('name')
         self.formatOptions = [f.text for f in elem.findall('wcs20ows:Parameter/wcs20ows:AllowedValues/wcs20ows:Value',
-                                                           namespaces=WCS_namespaces)]
+                                                           namespaces=WCS_names)]
         methods = []
-        for verb in elem.findall('ows200:DCP/ows200:HTTP/*', namespaces=WCS_namespaces):
+        for verb in elem.findall('ows200:DCP/ows200:HTTP/*', namespaces=WCS_names):
             url = verb.attrib['{http://www.w3.org/1999/xlink}href']
             methods.append((verb.tag, {'url': url}))
         self.methods = dict(methods)
