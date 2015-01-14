@@ -3,17 +3,19 @@ Created on Jan 14, 2015
 
 @author: itpp
 '''
-from owslib.coverage.wcs200 import WCSExtension, log
+from owslib.coverage.wcs200 import WebCoverageService_2_0_0 as wcs
+from owslib.coverage.wcs200 import log as wcs_log
+from owslib.coverage.gml import GMLTimePosition, GMLEnvelope
 
 # Define useful namespace lookup dictionaries.
 MO_names = {'meto': 'http://def.wmo.int/metce/2013/metocean'}
-GML_names = {'gml': 'http://www.opengis.net/gml/3.2'}
+GML_names = {'gml32': 'http://www.opengis.net/gml/3.2'}
 
 # A list of the subtypes of WCSExtension that we want to recognise.
 _WCS_EXTENSION_SUBTYPES = []
 
-class MetOceanCoverageCollection(WCSExtension):
-    # Define the XML tag that this represents.
+class MetOceanCoverageCollection(object):
+    # Define the XML tag that this object represents.
     TAG = '{http://def.wmo.int/metce/2013/metocean}CoverageCollectionSummary'
 
     def __init__(self, service, coverage_collection_id,
@@ -32,9 +34,9 @@ class MetOceanCoverageCollection(WCSExtension):
         element_mapping = {
             '{{{meto}}}coverageCollectionId'.format(**MO_names): ['coverage_collection_id', get_text],
             # The latest spect states that there will be an envelope at this level, but the test server has a boundedBy parenting the envelope.
-            '{{{gml}}}boundedBy'.format(**GML_names): ['envelope', GMLBoundedBy.from_xml],
-            '{{{meto}}}referenceTimeList'.format(**MO_names): ['reference_times', ReferenceTimes.from_xml],
-            '{{{gml}}}name'.format(**GML_names): ['name', get_text]
+            '{{{gml32}}}boundedBy'.format(**GML_names): ['envelope', GMLBoundedBy.from_xml],
+            '{{{meto}}}referenceTimeList'.format(**MO_names): ['reference_times', MetOceanReferenceTimeList.from_xml],
+            '{{{gml32}}}name'.format(**GML_names): ['name', get_text]
             }
         keywords = {'service': service}
         for child in element:
@@ -42,8 +44,7 @@ class MetOceanCoverageCollection(WCSExtension):
                 keyword_name, element_fn = element_mapping[child.tag]
                 keywords[keyword_name] = element_fn(child)
             else:
-                log.debug('Coverage tag {} not found.'.format(child.tag))
-                print('unknown_tag', child.tag)
+                wcs_log.debug('Coverage tag {} not found.'.format(child.tag))
         try:
             return cls(**keywords)
         except:
@@ -69,11 +70,11 @@ class MetOceanCoverageCollection(WCSExtension):
 
         return openURL(base_url, data, 'Get', service.cookies)
 
-# Add this class to our list of Extension subtypes we want WCS2.0 to recognise
+# Add this class to our list of Extension subtypes that we want WCS2.0 to recognise.
 _WCS_EXTENSION_SUBTYPES.append(MetOceanCoverageCollection)
 
 
-class ReferenceTimes(object):
+class MetOceanReferenceTimeList(object):
     def __init__(self, times):
         self.times = times
 
@@ -81,25 +82,9 @@ class ReferenceTimes(object):
     def from_xml(cls, element):
         #print('REFTIME-fromxml:', type(element), repr(element))
         content, = element.findall('meto:ReferenceTime', namespaces=MO_names)
-        children = content.findall('gml:timePosition', namespaces=GML_names)
-        times = [child.text for child in content]
-        print(times)
+        children = content.findall('gml32:timePosition', namespaces=GML_names)
+        times = [GMLTimePosition(child) for child in content]
         return cls(times)
-
-
-class GMLEnvelope(object):
-    def __init__(self, times):
-        return None
-        self.name = name
-        self.labels = labels
-        self.units = units
-        self.dimension = dimension
-        self.lower_corner = lower_corner
-        self.upper_corner = upper_corner
-
-    @classmethod
-    def from_xml(cls, element):
-        return cls(element)
 
 
 class GMLBoundedBy(object):
@@ -112,4 +97,4 @@ class GMLBoundedBy(object):
 
 def register_wcs_extension_subtypes():
     for cls in _WCS_EXTENSION_SUBTYPES:
-        WCSExtension.register_wcs_extension_subtype(cls)
+        wcs.recognised_capability_extensions[cls.TAG] = cls
