@@ -3,6 +3,13 @@ from lxml import etree
 import gml
 
 
+XML_template = """
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:gml="http://www.opengis.net/gml/3.2">
+{content}
+</root>
+""".strip()
+
 DOMAINSET_EXAMPLE = """
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:gml="http://www.opengis.net/gml/3.2">
@@ -64,6 +71,26 @@ class TestGMLVector(TestCase):
         self.assertEqual(self.vector.components, [0.5, 7.0467596052536985])
 
 
+class TestGMLEnvelope(TestCase):
+    def setUp(self):
+        root = etree.XML(XML_template.format(content="""
+          <gml:Envelope axisLabels="Long Lat" srsDimension="2" srsName="CRS:84" uomLabels="deg deg">
+            <gml:lowerCorner>-180 -90</gml:lowerCorner>
+            <gml:upperCorner>180 90</gml:upperCorner>
+          </gml:Envelope>
+        """))
+        self.envelope = gml.GMLEnvelope.from_xml(root[0])
+
+    def test_repr(self):
+        self.assertEqual(repr(self.envelope),
+                         'GMLEnvelope(lows=[-180.0, -90.0], highs=[180.0, 90.0])')
+
+    def test_attributes(self):
+        self.assertIsInstance(self.envelope.lows[0], float)
+        self.assertEqual(self.envelope.lows, [-180.0, -90.0])
+        self.assertEqual(self.envelope.highs, [180.0, 90.0])
+
+
 class TestGMLGridEnvelope(TestCase):
     def setUp(self):
         root = etree.XML(DOMAINSET_EXAMPLE)
@@ -95,6 +122,25 @@ class TestGMLPoint(TestCase):
     def test_attributes(self):
         self.assertIsInstance(self.point.xy[0], float)
         self.assertEqual(self.point.xy, [0.0, -90.0])
+
+
+# Chapter 14
+
+class TestGMLTimePosition(TestCase):
+    def setUp(self):
+        root = etree.XML(XML_template.format(content="""
+          <gml:timePosition>2015-01-11T15:31:52Z</gml:timePosition>
+        """))
+        self.time = gml.GMLTimePosition.from_xml(root[0])
+
+    def test_repr(self):
+        self.assertEqual(repr(self.time),
+                         'GMLTimePosition(datetime.datetime(2015, 1, 11, 15, 31, 52))')
+
+    def test_attributes(self):
+        import datetime
+        self.assertIsInstance(self.time.datetime, datetime.datetime)
+        self.assertEqual(self.time.datetime, datetime.datetime(2015, 1, 11, 15, 31, 52))
 
 
 if __name__ == '__main__':

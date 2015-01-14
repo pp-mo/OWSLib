@@ -135,6 +135,31 @@ EXAMPLE = """
 """.strip()
 
 
+DOMAINSET_EXAMPLE = """
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:gml="http://www.opengis.net/gml/3.2">
+<gml:domainSet>
+  <gml:RectifiedGrid dimension="2" gml:id="GFS_Latest_ISBL_grid">
+    <gml:limits>
+      <gml:GridEnvelope>
+        <gml:low>0 0</gml:low>
+        <gml:high>719 360</gml:high>
+      </gml:GridEnvelope>
+    </gml:limits>
+    <gml:axisName>x</gml:axisName>
+    <gml:axisName>y</gml:axisName>
+    <gml:origin>
+      <gml:Point srsName="EPSG:4326" gml:id="GFS_Latest_ISBL_grid_origin">
+        <gml:coordinates>0 -90</gml:coordinates>
+      </gml:Point>
+    </gml:origin>
+    <gml:offsetVector srsName="EPSG:4326">0.5 7.0467596052536985</gml:offsetVector>
+    <gml:offsetVector srsName="EPSG:4326">0 14.573944878270581</gml:offsetVector>
+  </gml:RectifiedGrid>
+</gml:domainSet>
+</root>""".strip()
+
+
 namespaces = {'gml': 'http://www.opengis.net/gml/3.2'}
 
 
@@ -148,6 +173,7 @@ class GeometryTypeTracking(type):
         cls._geometry_types[cls.TAG] = cls
 
         super(GeometryTypeTracking, cls).__init__(name, bases, dct)
+
 
 def de_namespace(tag, namespaces):
     for key, namespace in namespaces.items():
@@ -183,23 +209,6 @@ class GMLdomainSet(object):
         geometry = GMLAbstractGeometry.subclass_from_xml(element[0])
         return cls(geometry)
 
-#        clsget_text = lambda elem: elem.text
-#        element_mapping = {'{{{WCSmetOcean}}}coverageCollectionId'.format(**WCS_namespaces): ['coverage_collection_id', get_text],
-#                           # The latest spect states that there will be an envelope at this level, but the test server has a boundedBy parenting the envelope.
-#                           '{{{gml32}}}boundedBy'.format(**WCS_namespaces): ['envelope', GMLBoundedBy.from_xml],
-#                           '{{{WCSmetOcean}}}referenceTimeList'.format(**WCS_namespaces): ['reference_times', ReferenceTimes.from_xml]}
-#        keywords = {'service': service}
-#        for child in element:
-#            if child.tag in element_mapping:
-#                keyword_name, element_fn = element_mapping[child.tag]
-#                keywords[keyword_name] = element_fn(child)
-#            else:
-#                log.debug('Coverage tag {} not found.'.format(child.tag))
-#        try:
-#            return cls(**keywords)
-#        except:
-#            print('Tried to initialise {} with {}'.format(cls, keywords))
-#            raise
 
 class GMLGrid(GMLAbstractGeometry):
     # See 19.2.2 Grid
@@ -249,6 +258,23 @@ class GMLRectifiedGrid(GMLGrid):
         return cls(limits, axes, origin, offset_vectors)
 
 
+class GMLEnvelope(object):
+    # See 10.1.4.6 EnvelopeType, Envelope
+    def __init__(self, lows, highs):
+        self.lows, self.highs = lows, highs
+
+    @classmethod
+    def from_xml(cls, element):
+        lows = element.find('gml:lowerCorner', namespaces=namespaces).text.split()
+        highs = element.find('gml:upperCorner', namespaces=namespaces).text.split()
+        lows = map(float, lows)
+        highs = map(float, highs)
+        return cls(lows, highs)
+
+    def __repr__(self):
+        return 'GMLEnvelope(lows={}, highs={})'.format(self.lows, self.highs)
+
+
 class GMLGridEnvelope(object):
     # See 10.1.4.6 EnvelopeType, Envelope
     def __init__(self, x0, y0, x1, y1):
@@ -265,6 +291,7 @@ class GMLGridEnvelope(object):
         return 'GMLGridEnvelope(x0={}, y0={}, x1={}, y1={})'.format(self.x0, self.y0, self.x1, self.y1)
 
 
+
 class GMLVector(object):
     # See 10.1.4.5 VectorType, Vector
     def __init__(self, components):
@@ -277,6 +304,23 @@ class GMLVector(object):
 
     def __repr__(self):
         return 'GMLVector({})'.format(self.components)
+
+
+# Chapter 14
+
+class GMLTimePosition(object):
+    # See 14.2.2.7 TimePositionType, timePosition
+    def __init__(self, datetime):
+        self.datetime = datetime
+
+    @classmethod
+    def from_xml(cls, element):
+        from datetime import datetime
+        dt = datetime.strptime(element.text, '%Y-%m-%dT%H:%M:%SZ')
+        return cls(dt)
+
+    def __repr__(self):
+        return 'GMLTimePosition({!r})'.format(self.datetime)
 
 
 
@@ -298,6 +342,7 @@ if __name__ == '__main__':
     from lxml import etree
 
     xml = TEMPLATE_EXAMPLE.format(content=EXAMPLE)
+    xml = DOMAINSET_EXAMPLE
     root = etree.XML(xml)
 
     for element in root[0].findall('gml:domainSet', namespaces=namespaces):
