@@ -2,165 +2,8 @@
 import lxml
 import warnings
 
-
-TEMPLATE_EXAMPLE = """
-<?xml version="1.0" encoding="UTF-8"?>
-<root xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ows="http://www.opengis.net/ows/2.0" xmlns:wcs="http://www.opengis.net/wcs/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:gmlcov="http://www.opengis.net/gmlcov/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:om="http://www.opengis.net/om/2.0" xmlns:metocean="http://def.wmo.int/metce/2013/metocean" xmlns:metce="http://def.wmo.int/metce/2013" xmlns:sam="http://www.opengis.net/sampling/2.0" xmlns:sams="http://www.opengis.net/samplingSpatial/2.0" xmlns:gmlrgrid="http://www.opengis.net/gml/3.3/rgrid" xsi:schemaLocation="http://schemas.opengis.net/wcs/2.0 http://schemas.opengis.net/wcs/2.0/wcsAll.xsd http://def.wmo.int/metce/2013/metocean https://ogcie.iblsoft.com/schemas/wcs-2.0/wcsMetOceanDescribeCoverage.xsd">
-    {content}
-    
-</root>
-""".strip()
-
-EXAMPLE = """
-    <gmlcov:ReferenceableGridCoverage gml:id="rgc_maskId_GFS_Latest_ISBL_1">
-                    <gml:boundedBy>
-                      <gml:Envelope srsName="CRS:84" axisLabels="Long Lat" uomLabels="deg deg" srsDimension="2">
-                        <gml:lowerCorner>-180 -90</gml:lowerCorner>
-                        <gml:upperCorner>180 90</gml:upperCorner>
-                      </gml:Envelope>
-                    </gml:boundedBy>
-                    <gml:domainSet>
-                      <gmlrgrid:ReferenceableGridByArray gml:id="rgba_maskId_GFS_Latest_ISBL_1" dimension="2" srsName="http://www.opengis.net/def/crs-combine?1=http://codes.wmo.int/grib2/codeflag/4.5/100&amp;2=http://www.opengis.net/def/temporal/ISO8601" axisLabels="altitude time" uomLabels="hPa h">
-                        <gml:limits>
-                          <gml:GridEnvelope>
-                            <gml:low>500 0</gml:low>
-                            <gml:high>500 192</gml:high>
-                          </gml:GridEnvelope>
-                        </gml:limits>
-                        <gml:axisLabels>z t</gml:axisLabels>
-                        <gml:posList>
-500 0
-500 3
-500 6
-500 9
-500 12
-500 15
-500 18
-500 21
-500 24
-500 27
-500 30
-500 33
-500 36
-500 39
-500 42
-500 45
-500 48
-500 54
-500 60
-500 66
-500 72
-500 78
-500 84
-500 90
-500 96
-500 102
-500 108
-500 114
-500 120
-500 132
-500 144
-500 156
-500 168
-500 180
-500 192
-</gml:posList>
-                        <gmlrgrid:sequenceRule axisOrder="+1 +2">Linear</gmlrgrid:sequenceRule>
-                      </gmlrgrid:ReferenceableGridByArray>
-                    </gml:domainSet>
-                    <gml:rangeSet>
-                      <gml:DataBlock>
-                        <gml:rangeParameters/>
-                        <gml:tupleList>
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-</gml:tupleList>
-                      </gml:DataBlock>
-                    </gml:rangeSet>
-                    <gmlcov:rangeType>
-                      <swe:DataRecord>
-                        <swe:field name="datacompletenessomission">
-                          <swe:Boolean>
-                            <swe:quality>
-                              <swe:Quantity>
-                                <swe:uom></swe:uom>
-                                <swe:constraint></swe:constraint>
-                                <swe:value>1.0</swe:value>
-                              </swe:Quantity>
-                            </swe:quality>
-                            <swe:nilValues>
-                              <swe:NilValues>
-                                <swe:nilValue reason="http://www.opengis.net/def/crs/EPSG/0/4326"/>
-                              </swe:NilValues>
-                            </swe:nilValues>
-                            <swe:value>0</swe:value>
-                          </swe:Boolean>
-                        </swe:field>
-                      </swe:DataRecord>
-                    </gmlcov:rangeType>
-                  </gmlcov:ReferenceableGridCoverage>
-""".strip()
-
-
-DOMAINSET_EXAMPLE = """
-<?xml version="1.0" encoding="UTF-8"?>
-<root xmlns:gml="http://www.opengis.net/gml/3.2">
-<gml:domainSet>
-  <gml:RectifiedGrid dimension="2" gml:id="GFS_Latest_ISBL_grid">
-    <gml:limits>
-      <gml:GridEnvelope>
-        <gml:low>0 0</gml:low>
-        <gml:high>719 360</gml:high>
-      </gml:GridEnvelope>
-    </gml:limits>
-    <gml:axisName>x</gml:axisName>
-    <gml:axisName>y</gml:axisName>
-    <gml:origin>
-      <gml:Point srsName="EPSG:4326" gml:id="GFS_Latest_ISBL_grid_origin">
-        <gml:coordinates>0 -90</gml:coordinates>
-      </gml:Point>
-    </gml:origin>
-    <gml:offsetVector srsName="EPSG:4326">0.5 7.0467596052536985</gml:offsetVector>
-    <gml:offsetVector srsName="EPSG:4326">0 14.573944878270581</gml:offsetVector>
-  </gml:RectifiedGrid>
-</gml:domainSet>
-</root>""".strip()
-
-
-namespaces = {'gml': 'http://www.opengis.net/gml/3.2'}
+namespaces = {'gml': 'http://www.opengis.net/gml/3.2',
+              'gmlrgrid': 'http://www.opengis.net/gml/3.3/rgrid'}
 
 
 class GeometryTypeTracking(type):
@@ -170,10 +13,16 @@ class GeometryTypeTracking(type):
     def __init__(cls, name, bases, dct):
         # Update the _geometry_types dictionary for any subclass which
         # is created.
-        cls._geometry_types[cls.TAG] = cls
+        for tag in cls.TAGS or []:
+            cls._geometry_types[tag] = cls
 
         super(GeometryTypeTracking, cls).__init__(name, bases, dct)
 
+
+def apply_namespace(tag, namespaces):
+    for key, namespace in namespaces.items():
+        tag = tag.replace(key + ':', '{' + namespace + '}')
+    return tag
 
 def de_namespace(tag, namespaces):
     for key, namespace in namespaces.items():
@@ -181,12 +30,48 @@ def de_namespace(tag, namespaces):
     return tag
 
 
-class GMLAbstractGeometry(object):
+def non_instantiable(cls):
+    def __init__(self, *args, **kwargs):
+        raise ValueError('The {} class cannot be created - it is a simple XML container.')
+    cls.__init__ = __init__
+    return cls
+
+
+@non_instantiable
+class GMLConcept(object):
+    #: The GML tags where this GML concept can be found.
+    TAGS = None
+
+    @classmethod
+    def from_xml(cls, element):
+        return cls(**cls.init_kwargs_from_xml(element))
+
+    def __repr__(self):
+        return '<{} instance>'.format(self.__class__.__name__)
+
+    @classmethod
+    def find(cls, parent_element, allow_none=True):
+        """Find a single XML element which can be used by this GML concept."""
+        element = None
+        for tag in cls.TAGS or []:
+            element = parent_element.find(tag, namespaces=namespaces)
+            if element is not None:
+                break
+        if element is None and not allow_none:
+            raise ValueError('Tags {} not found.'.format(', '.join(cls.TAGS or [])))
+        return element
+
+    @classmethod
+    def find_one(cls, parent_element):
+        return cls.find(parent_element, allow_none=False)
+
+
+class GMLAbstractGeometry(GMLConcept):
     # Ref: 10.1.3.1 AbstractGeometryType
     __metaclass__ = GeometryTypeTracking
 
-    #: The GML tag that this geometry represents.
-    TAG = None
+    #: The GML tags that this geometry represents.
+    TAGS = None
 
     #: A mapping of GML tag to concrete implementation.
     #: This is updated automatically upon subclassing GMLAbstractGeometry
@@ -199,25 +84,19 @@ class GMLAbstractGeometry(object):
         return geometry_class.from_xml(element)
 
 
-class GMLdomainSet(object):
+class GMLdomainSet(GMLConcept):
     # Ref: 19.3.4 domainSet, DomainSetType
-    def __init__(self, geometry):
-        self.geometry = geometry
+    TAGS = ['gml:domainSet']
 
     @classmethod
     def from_xml(cls, element):
         geometry = GMLAbstractGeometry.subclass_from_xml(element[0])
-        return cls(geometry)
-
-
-class GMLGrid(GMLAbstractGeometry):
-    # See 19.2.2 Grid
-    TAG = 'gml:Grid'
+        return geometry
 
 
 class GMLPoint(GMLAbstractGeometry):
     # See 10.3.1 PointType, Point
-    TAG = 'gml:Point'
+    TAGS = ['gml:Point']
     def __init__(self, xy):
         self.xy = xy
 
@@ -233,21 +112,36 @@ class GMLPoint(GMLAbstractGeometry):
         return 'GMLPoint({})'.format(self.xy)
 
 
-class GMLRectifiedGrid(GMLGrid):
-    # See 19.2.3 RectifiedGrid
-    TAG = 'gml:RectifiedGrid'
-
-    def __init__(self, limits, axes, origin, offset_vectors):
-        [self.limits, self.axes,
-         self.origin, self.offset_vectors] = limits, axes, origin, offset_vectors
+class GMLGrid(GMLAbstractGeometry):
+    # See 19.2.2 Grid
+    TAGS = ['gml:Grid']
+    def __init__(self, limits, axes, dims):
+        self.limits, self.axes, self.dims = limits, axes, dims
 
     @classmethod
-    def from_xml(cls, element):
+    def init_kwargs_from_xml(cls, element):
         limits = GMLGridEnvelope.from_xml(element.find('gml:limits', namespaces=namespaces)[0])
 
         axes = [axis.text for axis in element.findall('gml:axisName', namespaces=namespaces)]
-        if not axes and element.find('gml:axisLabels', namespace=namespaces):
-            warnings.warn('axisLabels not implemented for {}'.format(cls.__name__))
+        labels = element.find('gml:axisLabels', namespaces=namespaces)
+        if not axes and labels is not None:
+            axes = labels.text.split()
+
+        dims = int(element.get('dimension'))
+        return {'limits': limits, 'axes': axes, 'dims': dims}
+
+
+class GMLRectifiedGrid(GMLGrid):
+    # See 19.2.3 RectifiedGrid
+    TAGS = ['gml:RectifiedGrid']
+
+    def __init__(self, limits, axes, dims, origin, offset_vectors):
+        super(GMLRectifiedGrid, self).__init__(limits, axes, dims)
+        self.origin, self.offset_vectors = origin, offset_vectors
+
+    @classmethod
+    def init_kwargs_from_xml(cls, element):
+        kwargs = GMLGrid.init_kwargs_from_xml(element)
 
         origin_element = element.find('gml:origin', namespaces=namespaces)[0]
         origin = GMLAbstractGeometry.subclass_from_xml(origin_element)
@@ -255,10 +149,65 @@ class GMLRectifiedGrid(GMLGrid):
         offset_vectors = [GMLVector.from_xml(vector)
                           for vector in element.findall('gml:offsetVector', namespaces=namespaces)]
 
-        return cls(limits, axes, origin, offset_vectors)
+        kwargs.update({'offset_vectors': offset_vectors, 'origin': origin})
+        return kwargs
 
 
-class GMLEnvelope(object):
+class AbstractReferenceableGrid(GMLGrid):
+    # See 10.3 AbstractReferenceableGrid
+    pass
+
+
+class GMLReferenceableGridByArray(AbstractReferenceableGrid):
+    # See 10.4 ReferenceableGridByArray
+    TAGS = ['gml:ReferencableGridByArray',
+            'gmlrgrid:ReferencableGridByArray']
+    def __init__(self, limits, axes, dims, pos_list, sequence_rule):
+        super(GMLReferenceableGridByArray, self).__init__(limits, axes, dims)
+        self.pos_list = pos_list
+        self.sequence_rule = sequence_rule
+
+    def np_arrays(self):
+        import numpy as np
+        assert self.sequence_rule[1] == 'Linear'
+        axes_dims = [int(dim[1:]) - 1 for dim in self.sequence_rule[0].split(' ')]
+        values = np.array(self.pos_list)
+        axes_arrays = {ax: values[ax_i::len(self.axes)] for ax_i, ax in enumerate(self.axes)}
+
+        shape = self.limits.highs
+        if np.prod(shape) != len(axes_arrays.values()[0]):
+            # There are some badly implemented GridEnvelopes out there...
+            n_unique = {ax: len(np.unique(arr)) for ax, arr in axes_arrays.items()}
+            shape = [n_unique[ax] for ax in self.axes]
+
+        for ax_name, axes_dim in zip(axes_arrays, axes_dims):
+            # XXX Completely undocumented, but it looks to be column-major order...
+            axes_arrays[ax_name] = axes_arrays[ax_name].reshape(shape, order='f')
+
+            # Let's tidy up and remove the repeated dimension (leaving that dimension length one).
+            full = [slice(0, 1)] * len(shape)
+            full[axes_dim] = slice(None)
+            axes_arrays[ax_name] = axes_arrays[ax_name][full]
+
+        return axes_arrays
+
+    @classmethod
+    def init_kwargs_from_xml(cls, element):
+        kwargs = AbstractReferenceableGrid.init_kwargs_from_xml(element)
+
+        pos_list = GMLPosList.from_xml(GMLPosList.find_one(element))
+
+        sequence_rule = GMLSequenceRule.find_one(element)
+        sequence_rule = sequence_rule.get('axisOrder'), sequence_rule.text
+        kwargs.update({'pos_list': pos_list, 'sequence_rule': sequence_rule})
+        return kwargs
+
+
+class GMLSequenceRule(GMLConcept):
+    TAGS = ['gml:sequenceRule', 'gmlrgrid:sequenceRule']
+
+
+class GMLEnvelope(GMLConcept):
     # See 10.1.4.6 EnvelopeType, Envelope
     def __init__(self, lows, highs):
         self.lows, self.highs = lows, highs
@@ -275,24 +224,24 @@ class GMLEnvelope(object):
         return 'GMLEnvelope(lows={}, highs={})'.format(self.lows, self.highs)
 
 
-class GMLGridEnvelope(object):
+class GMLGridEnvelope(GMLConcept):
     # See 10.1.4.6 EnvelopeType, Envelope
-    def __init__(self, x0, y0, x1, y1):
-        self.x0, self.y0, self.x1, self.y1 = x0, y0, x1, y1
+    def __init__(self, lows, highs):
+        self.lows, self.highs = lows, highs
 
     @classmethod
     def from_xml(cls, element):
-        # Note: We think this may be 2 dimensional.
-        x0, y0 = element.find('gml:low', namespaces=namespaces).text.split()
-        x1, y1 = element.find('gml:high', namespaces=namespaces).text.split()
-        return cls(int(x0), int(y0), int(x1), int(y1))
+        # Note: This is not always 2 dimensional!
+        lows = element.find('gml:low', namespaces=namespaces).text.split()
+        highs = element.find('gml:high', namespaces=namespaces).text.split()
+        return cls(map(int, lows), map(int, highs))
 
     def __repr__(self):
-        return 'GMLGridEnvelope(x0={}, y0={}, x1={}, y1={})'.format(self.x0, self.y0, self.x1, self.y1)
+        return 'GMLGridEnvelope(lows={}, highs={})'.format(self.lows, self.highs)
 
 
 
-class GMLVector(object):
+class GMLVector(GMLConcept):
     # See 10.1.4.5 VectorType, Vector
     def __init__(self, components):
         self.components = components
@@ -306,9 +255,21 @@ class GMLVector(object):
         return 'GMLVector({})'.format(self.components)
 
 
+class GMLPosList(GMLConcept):
+    # See 10.1.4.2 DirectPositionListType, posList
+    TAGS = ['gml:posList']
+
+    @classmethod
+    def from_xml(cls, element):
+        values = map(float, element.text.split())
+        return values
+
 # Chapter 14
 
-class GMLTimePosition(object):
+GMLTimeFormat = '%Y-%m-%dT%H:%M:%SZ'
+
+
+class GMLTimePosition(GMLConcept):
     # See 14.2.2.7 TimePositionType, timePosition
     def __init__(self, datetime):
         self.datetime = datetime
@@ -316,11 +277,68 @@ class GMLTimePosition(object):
     @classmethod
     def from_xml(cls, element):
         from datetime import datetime
-        dt = datetime.strptime(element.text, '%Y-%m-%dT%H:%M:%SZ')
+        dt = datetime.strptime(element.text, GMLTimeFormat)
         return cls(dt)
 
     def __repr__(self):
         return 'GMLTimePosition({!r})'.format(self.datetime)
+
+
+class GMLTimePeriod(GMLConcept):
+    # 14.2.2.5 TimePeriod
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    @classmethod
+    def from_xml(cls, element):
+        start = element.find('gml:beginPosition', namespaces=namespaces)
+        if start is None:
+            raise ValueError('End position not found. gml:start needs to be implemented.')
+#            start = element.find('gml:begin', namespaces=namespaces)
+
+        end = element.find('gml:endPosition', namespaces=namespaces)
+        if end is None:
+            raise ValueError('End position not found. gml:end needs to be implemented.')
+#            end = element.find('gml:end', namespaces=namespaces)
+
+        from datetime import datetime
+        start = datetime.strptime(start.text, GMLTimeFormat)
+        end = datetime.strptime(end.text, GMLTimeFormat)
+
+        return cls(start, end)
+    
+    def __repr__(self):
+        return 'TimePeriod({!r}, {!r})'.format(self.start, self.end)
+
+# Chapter 19
+
+class GMLRangeSet(GMLConcept):
+    # See 19.3.5 rangeSet, RangeSetType
+    def __init__(self, data):
+        self.data = data
+
+    @classmethod
+    def from_xml(cls, element):
+        data = GMLDataBlock.from_xml(element.find('gml:DataBlock', namespaces=namespaces))
+        parameters = element.find('gml:rangeParameters', namespaces=namespaces)
+        if parameters is not None:
+            raise NotImplementedError('Range parameters not yet implemented in gml:RangeSet.')
+        return cls(data)
+
+
+class GMLDataBlock(GMLConcept):
+    # See 19.3.6 DataBlock
+    def __init__(self, values):
+        self.values = values
+
+    @classmethod
+    def from_xml(cls, element):
+        components = element.find('gml:tupleList', namespaces=namespaces).text.split(',')
+        values = [component.split() for component in components]
+        return cls(values)
+
+
 
 
 
@@ -336,18 +354,19 @@ class GMLTimePosition(object):
 #    """
 
 
-
-
 if __name__ == '__main__':
     from lxml import etree
 
-    xml = TEMPLATE_EXAMPLE.format(content=EXAMPLE)
-    xml = DOMAINSET_EXAMPLE
-    root = etree.XML(xml)
+    with open('describeCoverage_met_ocean_example.txt', 'r') as fh:
+        root = etree.XML(fh.read())
 
-    for element in root[0].findall('gml:domainSet', namespaces=namespaces):
-        print GMLdomainSet.from_xml(element)
-        print element.tag
-#        ds = GMLdomainSet.from_xml(element)
-#        print ds
-#        print ds.geometry.limits, ds.geometry.axes, ds.geometry.origin, ds.geometry.offset_vectors
+    import gmlcov
+    import wcs_20_describe_coverage as wcs
+    import wcs_20_metocean
+
+    coverage = wcs.DescribeCoverage.from_xml(root[0])
+    print type(coverage.extension)
+    data_mask = coverage.extension.fields['relative-humidity']
+    ds = data_mask.grid_coverage.domain_set
+
+#    print ds.np_arrays()
