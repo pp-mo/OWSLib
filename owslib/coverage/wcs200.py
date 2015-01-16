@@ -236,82 +236,11 @@ class WebCoverageService_2_0_0(WCSBase):
 #        if isinstance(collectionid, CoverageSummary):
 #            collectionid = collectionid.collectionid
 
-    def _etree_for_GetCoverage(self, coverage, fields=None, subsets=None,
-                            result_format='NetCDF3'):
-        """
-        Args:
-        * coverage (string or CoverageSummary):
-            which coverage to get
-        * fields ((list of) string or ???):
-            which fields (aka phenomenon names).  (Default is all).
-        * subsets (list of ???):
-            specify dimension subsetting
-        * result_format (string):
-            type of file to return.
-
-        """
-        if isinstance(coverage, basestring):
-            coverage_string = coverage
-        else:
-            coverage_string = coverage.name
-        if fields is None:
-            fields = all_fields  # TODO: need to define this somehow !
-        if isinstance(fields, basestring):  #TODO: or Field type
-            fields = [fields]
-        field_names = [fld if isinstance(fld, basestring) else fld.name
-                       for fld in fields]
-        # Create the root GetCoverage element.
-        tagname = '{{{wcs20}}}GetCoverage'.format(**WCS_names)
-        root_el = etree.Element(tagname,
-                                service='WCS', version='2.0.0')
-
-        # Add the absolutely minimal root_el/Extension element, as required.
-        tagname = '{{{wcs20}}}Extension'.format(**WCS_names)
-        ext_el = etree.SubElement(root_el, tagname)
-        # Add a root_el/Extension/RangeSubset, specifying the fields required.
-        tagname = ('{http://www.opengis.net/wcs/range-subsetting/1.0}'
-                   'rangeSubset')
-        subs_el = etree.SubElement(ext_el, tagname)
-        for fld_name in field_names:
-            tagname = ('{http://www.opengis.net/wcs/range-subsetting/1.0}'
-                       'rangeComponent')
-            fld_el = etree.Element(tagname)
-            fld_el.text = fld_name
-            subs_el.append(fld_el)
-        # Add a root_el/Extension/GetCoverageCrs
-        tagname = ('{http://www.opengis.net/wcs_service-extension_crs/1.0}'
-                   'GetCoverageCrs')
-        crs_el = etree.SubElement(ext_el, tagname)
-        # Add a root_el/Extension/GetCoverageCrs/subsettingCrs
-        tagname = ('{http://www.opengis.net/wcs_service-extension_crs/1.0}'
-                   'subsettingCrs')
-        crs_ss_el = etree.SubElement(crs_el, tagname)
-        # N.B. insists on having one, and must have (at least) an empty text.
-        crs_ss_el.text = ' \n '
-
-        # Add the root/coverageId element.
-        cov_el = etree.SubElement(root_el,
-                               '{{{wcs20}}}CoverageId'.format(**WCS_names))
-        cov_el.text = coverage_string
-
-        # Add the format element.
-        fmt_el = etree.SubElement(root_el,
-                               '{{{wcs20}}}format'.format(**WCS_names))
-        fmt_el.text = result_format
-        return root_el
-
-    def _xml_for_GetCoverage(self, *args, **kwargs):
-        tree = self._etree_for_GetCoverage(*args, **kwargs)
-        text = etree.tostring(tree)
-        return '<?xml version="1.0" encoding="UTF-8"?>' + text
-
-    def getCoverage(self, from_xml=None, **kwargs):
-        if from_xml is None:
-            from_xml = self._xml_for_GetCoverage(**kwargs)
+    def getCoverage(self, xml):
         coverage_collection = self.find_operation('GetCoverage')
         base_url = coverage_collection.href_via('HTTP', 'Post')
         from owslib.util import http_post
-        return http_post(base_url, from_xml)
+        return http_post(base_url, xml)
 
     def getOperationByName(self, name):
         """Return a named operation item."""
