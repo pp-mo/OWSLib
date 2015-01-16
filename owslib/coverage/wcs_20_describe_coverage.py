@@ -1,5 +1,5 @@
 import gml
-from wcs200 import WCS_namespaces as namespaces
+from wcs200 import WCS_names as namespaces
 
 from gml import de_namespace, non_instantiable
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wcs2:GetCoverage xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:wcs2="http://www.opengis.net/wcs/2.0"
+    xmlns:wcsCRS="http://www.opengis.net/wcs_service-extension_crs/1.0"
+    xmlns:int="http://www.opengis.net/WCS_service-extension_interpolation/1.0"
+    xmlns:rsub="http://www.opengis.net/wcs/range-subsetting/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:metocean="http://def.wmo.int/metce/2013/metocean"
+    service="WCS" version="2.0.0"
+    xsi:schemaLocation="http://www.opengis.net/wcs/2.0 http://schemas.opengis.net/wcs/2.0/wcsGetCoverage.xsd
+    http://www.opengis.net/wcs/crs/1.0 https://raw.github.com/EOxServer/schemas/master/wcs/crs/1.0/wcsCrs.xsd
+    http://www.opengis.net/wcs/range-subsetting/1.0 https://raw.github.com/EOxServer/schemas/master/wcs/range-subsetting/1.0/rsub.xsd">
+    
+    <wcs2:Extension>
+        <rsub:rangeSubset>
+            <rsub:rangeComponent>temperature</rsub:rangeComponent>
+        </rsub:rangeSubset>
+        <wcsCRS:GetCoverageCrs>
+            <wcsCRS:subsettingCrs>
+                http://www.opengis.net/def/crs-combine?
+                1=CRS:84&amp;
+                2=http://www.codes.wmo.int/GRIB2/table4.5/IsobaricSurface&amp;
+                3=gml:TimeInstant
+            </wcsCRS:subsettingCrs>
+        </wcsCRS:GetCoverageCrs>
+    </wcs2:Extension>
+    <wcs2:CoverageId>GFS_2015-01-11T06.00.00Z_AGL</wcs2:CoverageId>
+    <metocean:DimensionSlice>
+        <wcs2:Dimension>lat</wcs2:Dimension>
+        <metocean:SlicePoint uomLabels="Deg">51.0</metocean:SlicePoint>
+    </metocean:DimensionSlice>
+    <metocean:DimensionSlice>
+        <wcs2:Dimension>long</wcs2:Dimension>
+        <metocean:SlicePoint uomLabels="Deg">-2.13213213213213</metocean:SlicePoint>
+    </metocean:DimensionSlice>
+    <wcs2:format>NetCDF3</wcs2:format>
+</wcs2:GetCoverage>
