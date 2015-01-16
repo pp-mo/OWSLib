@@ -8,8 +8,9 @@ from lxml import etree
 
 import mock
 
-from owslib.coverage.wcs_metocean import _GetCoverage_etree as get_etree, \
-    GetCoverage_xml as get_xml
+from owslib.coverage.wcs_metocean import \
+    _build_GetCoverage_etree as get_etree, \
+    build_GetCoverage_xml as get_xml
 
 
 def _check_el(test, el, tag, attributes=None, text=None, n_children=0):
@@ -22,8 +23,8 @@ def _check_el(test, el, tag, attributes=None, text=None, n_children=0):
     test.assertEqual(len(el), n_children)
 
 
-class Test__GetCoverage_etree(tests.TestCase):
-    def test__etree_for_GetCoverage__simple(self):
+class Test__build_GetCoverage_etree(tests.TestCase):
+    def test_simple(self):
         # Get a maximally-simple request.
         tree = get_etree('Dummy_Coverage_Name', fields='Dummy_Field_Name')
 
@@ -62,7 +63,7 @@ class Test__GetCoverage_etree(tests.TestCase):
                   attributes={'version': '2.0.0', 'service': 'WCS'},
                   n_children=3)
 
-    def test__etree_for_GetCoverage__multiple_fields(self):
+    def test_multiple_fields(self):
         # Get a request asking for two fields.
         # TODO: in integration, check these as variables in the file.
         tree = get_etree('Dummy_Coverage_Name',
@@ -75,8 +76,8 @@ class Test__GetCoverage_etree(tests.TestCase):
 #        pass
 
 
-class Test_GetCoverage_xml(tests.TestCase):
-    def test__xml_for_GetCoverage(self):
+class Test_build_GetCoverage_xml(tests.TestCase):
+    def test_basic(self):
         # Test a minimal case, just to check the conversion to xml.
         xml = get_xml('Dummy_Coverage_Name', fields='Dummy_Field_Name')
         test_string = ( \

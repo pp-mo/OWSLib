@@ -236,7 +236,7 @@ class WebCoverageService_2_0_0(WCSBase):
 #        if isinstance(collectionid, CoverageSummary):
 #            collectionid = collectionid.collectionid
 
-    def getCoverage(self, xml):
+    def getCoverage_from_xml(self, xml):
         coverage_collection = self.find_operation('GetCoverage')
         base_url = coverage_collection.href_via('HTTP', 'Post')
         from owslib.util import http_post

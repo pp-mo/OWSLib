@@ -97,8 +97,8 @@ class GMLBoundedBy(object):
         return GMLEnvelope.from_xml(element[0])
 
 
-def _GetCoverage_etree(coverage, fields=None, subsets=None,
-                       result_format='NetCDF3'):
+def _build_GetCoverage_etree(coverage, fields=None, subsets=None,
+                             result_format='NetCDF3'):
     """
     Construct an etree xml representation for a GetCoverage call.
 
@@ -113,6 +113,12 @@ def _GetCoverage_etree(coverage, fields=None, subsets=None,
         type of file to return.
 
     """
+    # NOTE: this does not currently depend on metocean at all, so need not
+    # really belong in this module.
+    # However, it would do when we support subsetting.
+    # At present, we accept just *names* of coverages and fields, which must
+    # be got from other metadata (capabilities and coverage descriptions).
+
     if isinstance(coverage, basestring):
         coverage_string = coverage
     else:
@@ -179,7 +185,7 @@ def _GetCoverage_etree(coverage, fields=None, subsets=None,
     return root_el
 
 
-def GetCoverage_xml(*args, **kwargs):
+def build_GetCoverage_xml(*args, **kwargs):
     """
     Return xml for a GetCoverage call.
 
@@ -194,27 +200,7 @@ def GetCoverage_xml(*args, **kwargs):
         type of file to return.
 
     """
-    tree = _GetCoverage_etree(*args, **kwargs)
-    text = etree.tostring(tree, xml_declaration=True, encoding='UTF-8')
-    return text
-
-
-def GetCoverage(*args, **kwargs):
-    """
-    Return xml for a GetCoverage call.
-
-    Args:
-    * coverage (string):  (?? or CoverageDescription objects ??)
-        which coverage to get
-    * fields ((list of) string):  (?? or Field objects ???):
-        which fields (aka phenomenon names).  (Default is all).
-    * subsets (list of ???):
-        specify dimension subsetting
-    * result_format (string):
-        type of file to return.
-
-    """
-    tree = _GetCoverage_etree(*args, **kwargs)
+    tree = _build_GetCoverage_etree(*args, **kwargs)
     text = etree.tostring(tree, xml_declaration=True, encoding='UTF-8')
     return text
 
