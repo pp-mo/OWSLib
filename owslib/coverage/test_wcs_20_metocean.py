@@ -43,13 +43,19 @@ class TestMetOceanDataMask(TestCase):
         self.assertEqual(self.data_mask.mask_id, 'maskId_GFS_Latest_ISBL_6')
         self.assertIsInstance(self.data_mask.grid_coverage, gmlcov.ReferenceableGridCoverage)
 
-    def test_coords(self):
-        coords = self.data_mask.coords
-        self.assertIsInstance(coords, dict)
-        self.assertEqual(sorted(coords.keys()), ['t', 'z'])
-        self.assertEqual(coords['x'].shape, [1])
+    def test_axes(self):
+        axes = self.data_mask.axes
+        self.assertIsInstance(axes, dict)
+        self.assertEqual(sorted(axes.keys()), ['Lat', 'Long', 't', 'z'])
 
-        self.fail('Woops')
+        # XXX What order do we want?
+        self.assertEqual(axes['t'].ordinates.shape, (1, 1, 1, 35))
+        self.assertEqual(axes['z'].ordinates.shape, (1, 1, 25, 1))
+        self.assertEqual(axes['Lat'].ordinates.shape, (1, 360, 1, 1))
+        self.assertEqual(axes['Long'].ordinates.shape, (719, 1, 1, 1))
+
+        self.assertEqual([axes['Lat'].ordinates.min(), axes['Lat'].ordinates.max()], [-90.0, 90.0])
+        self.assertEqual([axes['Long'].ordinates.min(), axes['Long'].ordinates.max()], [-180.0, 180.0])
 
 
 if __name__ == '__main__':

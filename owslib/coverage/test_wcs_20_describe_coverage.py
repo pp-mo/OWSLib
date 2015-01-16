@@ -2,6 +2,7 @@
 from unittest import TestCase
 from lxml import etree
 import wcs_20_describe_coverage as wcs
+import wcs_20_metocean as metOcean
 import gml
 
 
@@ -16,7 +17,11 @@ class TestReferenceableGridCoverage(TestCase):
 
     def test_attributes(self):
         self.assertIsInstance(self.grid_cov.domain_set, gml.GMLRectifiedGrid)
-        self.assertIsInstance(self.grid_cov.extension, int)
+        self.assertIsInstance(self.grid_cov.extension, metOcean.CoverageMetadata)
+
+        # Check that _coverage_description is available to the extension.
+        self.assertIs(self.grid_cov.extension._coverage_description, self.grid_cov)
+
 #        self.assertIsNone(self.grid_cov.range_type)
 #        self.assertIsInstance(self.grid_cov.range_set, gml.GMLRangeSet)
 #        self.assertEqual(self.grid_cov.gml_id, 'rgc_maskId_GFS_Latest_ISBL_1')

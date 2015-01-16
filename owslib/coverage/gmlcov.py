@@ -3,25 +3,32 @@ import gml
 namespaces = {'gmlcov': 'http://www.opengis.net/gmlcov/1.0'}
 
 
-class ReferenceableGridCoverage(gml.GMLConcept):
+class ReferenceableGridCoverage(gml.GMLAbstractGML):
     # See 6.6.9 ReferenceableGridCoverage
-    def __init__(self, gml_id, domain_set, range_type, range_set):
-        self.gml_id = gml_id
+    def __init__(self, attrs, domain_set, range_type, range_set, bounded_by):
+        super(ReferenceableGridCoverage, self).__init__(attrs)
         self.domain_set, self.range_type, self.range_set = domain_set, range_type, range_set
+        # NOTE: I didn't see this in the spec...
+        self.bounded_by = bounded_by
 
     @classmethod
-    def from_xml(cls, element):
+    def init_kwargs_from_xml(cls, element):
+        kwargs = super(ReferenceableGridCoverage, cls).init_kwargs_from_xml(element)
+
         range_set = gml.GMLRangeSet.from_xml(element.find('gml:rangeSet',
                                                           namespaces=gml.namespaces))
 
         domain_set = gml.GMLReferenceableGridByArray.from_xml(element.find('gml:domainSet',
                                                                            namespaces=gml.namespaces)[0])
-        gml_id = element.get(gml.apply_namespace('gml:id', gml.namespaces))
+
+        bounded_by = gml.GMLEnvelope.from_xml(element.find('gml:boundedBy', gml.namespaces)[0])
         # Not implemented: rangeType, boundedBy
-        return cls(gml_id, domain_set, None, range_set)
+
+        kwargs.update({'domain_set': domain_set, 'range_type': None, 'range_set': range_set, 'bounded_by': bounded_by})
+        return kwargs
 
     def __repr__(self):
-        return 'ReferenceableGridCoverage({!r}, {}, {}, {})'.format(self.gml_id, self.domain_set, self.range_type, self.range_set)
+        return 'ReferenceableGridCoverage({!r}, {}, {}, {}, {})'.format(self.attrs, self.domain_set, self.range_type, self.range_set, self.bounded_by)
 
 
 class ExtensionTypeTracking(type):
@@ -37,7 +44,7 @@ class ExtensionTypeTracking(type):
         super(ExtensionTypeTracking, cls).__init__(name, bases, dct)
 
 
-class Extension(gml.GMLConcept):
+class Extension(gml.GMLAbstractGML):
     # Seems undocumented. :(
     __metaclass__ = ExtensionTypeTracking
     TAGS = ['gmlcov:Extension']
@@ -67,7 +74,7 @@ class Extension(gml.GMLConcept):
         return ExtensionProperty.subclass_from_xml(element[0])
 
 
-class ExtensionProperty(gml.GMLConcept):
+class ExtensionProperty(gml.GMLAbstractGML):
     # Seems undocumented. :(
     __metaclass__ = ExtensionTypeTracking
     _subclasses = {}

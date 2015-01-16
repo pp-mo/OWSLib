@@ -1,7 +1,7 @@
 import gml
 from wcs200 import WCS_namespaces as namespaces
 
-from gml import de_namespace, apply_namespace, non_instantiable
+from gml import de_namespace, non_instantiable
 
 
 class ExtensionTypeTracking(type):
@@ -18,6 +18,10 @@ class ExtensionTypeTracking(type):
 class WCSExtension(object):
     #: The GML tags where this GML concept can be found.
     TAGS = None
+
+    def __init__(self):
+        #: The CoverageDescription object from which this extension came.
+        self._coverage_description = None
 
     __metaclass__ = ExtensionTypeTracking
     _subclasses = {}
@@ -85,6 +89,11 @@ class DescribeCoverage(object):
     def __init__(self, domain_set, range_type, extension=None):
         self.domain_set = domain_set
         self.extension = extension
+
+        # Provide sufficient context of this coverage to allow it
+        # to do what it likes.
+        if extension is not None:
+            self.extension.coverage_description = self
 
     @classmethod
     def from_xml(cls, element):
